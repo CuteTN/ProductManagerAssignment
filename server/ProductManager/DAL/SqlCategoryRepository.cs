@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using ProductManager.Models;
 
-namespace ProductManager.Data
+namespace ProductManager.DAL
 {
   class SqlCategoryRepository : ICategoryRepository
   {

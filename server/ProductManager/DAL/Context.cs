@@ -1,7 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using ProductManager.Models;
 
-namespace ProductManager.Data
+namespace ProductManager.DAL
 {
   public class Context : DbContext
   {

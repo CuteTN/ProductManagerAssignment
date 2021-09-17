@@ -3,7 +3,7 @@ using System.Linq;
 using AutoMapper;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
-using ProductManager.Data;
+using ProductManager.DAL;
 using ProductManager.Dtos;
 using ProductManager.Models;
 
@@ -39,13 +39,7 @@ namespace ProductManager.Controllers
       var result = _repository.GetProductById(id);
 
       if (result == null)
-        return NotFound(
-          new
-          {
-            Message = $"Couldn't find a Product with id = {id}!",
-            Id = id,
-          }
-        );
+        return NotFound();
 
       return Ok(_mapper.Map<ProductReadDto>(result));
     }
@@ -68,13 +62,7 @@ namespace ProductManager.Controllers
     {
       var oldProduct = _repository.GetProductById(id);
       if (oldProduct == null)
-        return NotFound(
-          new
-          {
-            Message = $"Couldn't find a Product with id = {id}!",
-            Id = id,
-          }
-        );
+        return NotFound();
 
       // var newProduct = _mapper.Map<Product>(productUpdateDto);
       var newProduct = _mapper.Map(productUpdateDto, oldProduct); // CuteTN note: this will mutate directly to the oldProduct
@@ -89,13 +77,7 @@ namespace ProductManager.Controllers
     {
       var oldProduct = _repository.GetProductById(id);
       if (oldProduct == null)
-        return NotFound(
-          new
-          {
-            Message = $"Couldn't find a Product with id = {id}!",
-            Id = id,
-          }
-        );
+        return NotFound();
 
       var productToPatch = _mapper.Map<ProductUpdateDto>(oldProduct);
       patchDoc.ApplyTo(productToPatch, ModelState);
@@ -117,13 +99,7 @@ namespace ProductManager.Controllers
     {
       var oldProduct = _repository.GetProductById(id);
       if (oldProduct == null)
-        return NotFound(
-          new
-          {
-            Message = $"Couldn't find a Product with id = {id}!",
-            Id = id,
-          }
-        );
+        return NotFound();
 
       _repository.DeleteProduct(oldProduct);
       _repository.SaveChanges();
@@ -136,26 +112,14 @@ namespace ProductManager.Controllers
     {
       var oldProduct = _repository.GetProductById(id);
       if (oldProduct == null)
-        return NotFound(
-          new
-          {
-            Message = $"Couldn't find a Product with id = {id}!",
-            Id = id,
-          }
-        );
+        return NotFound();
 
       var categoriesIdsList = categoriesIds.ToList();
       var categories = categoriesIdsList.Select(id => _categoryRepo.GetCategoryById(id)).ToList();
 
       for (int i = 0; i < categories.Count(); i++)
         if (categories[i] == null)
-          return NotFound(
-            new
-            {
-              Message = $"Couldn't find a Category with id = {categoriesIdsList[i]}!",
-              Id = categoriesIdsList[i],
-            }
-          );
+          return NotFound();
 
       _repository.SetProductCategories(oldProduct, categories);
       _repository.SaveChanges();

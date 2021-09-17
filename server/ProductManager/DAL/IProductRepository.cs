@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using ProductManager.Models;
 
-namespace ProductManager.Data
+namespace ProductManager.DAL
 {
   public interface IProductRepository
   {
