@@ -14,14 +14,16 @@ namespace ProductManager.Controllers
   [ApiController]
   public class ProductsController : ControllerBase
   {
-    private readonly IProductRepository _repository;
-    private readonly ICategoryRepository _categoryRepo;
+    private readonly UnitOfWork _unitOfWork;
+    private readonly GenericRepository<Product> _productRepo;
+    private readonly GenericRepository<Category> _categoryRepo;
     private readonly IMapper _mapper;
 
-    public ProductsController(IProductRepository repository, ICategoryRepository categoryRepo, IMapper mapper)
+    public ProductsController(UnitOfWork unitOfWork, IMapper mapper)
     {
-      _repository = repository;
-      _categoryRepo = categoryRepo;
+      _unitOfWork = unitOfWork;
+      _productRepo = unitOfWork.Repository<Product>();
+      _categoryRepo = unitOfWork.Repository<Category>();
       _mapper = mapper;
     }
 
@@ -29,14 +31,14 @@ namespace ProductManager.Controllers
     [HttpGet]
     public ActionResult<IEnumerable<ProductReadDto>> GetAllProducts()
     {
-      var result = _repository.GetAllProducts();
+      var result = _productRepo.GetAll();
       return Ok(_mapper.Map<IEnumerable<ProductReadDto>>(result));
     }
 
     [HttpGet("{id}", Name = "GetProductById")]
     public ActionResult<ProductReadDto> GetProductById(int id)
     {
-      var result = _repository.GetProductById(id);
+      var result = _productRepo.GetById(id);
 
       if (result == null)
         return NotFound();
@@ -48,8 +50,8 @@ namespace ProductManager.Controllers
     public ActionResult<ProductReadDto> CreateProduct(ProductCreateDto productCreateDto)
     {
       var product = _mapper.Map<Product>(productCreateDto);
-      _repository.CreateProduct(product);
-      _repository.SaveChanges(); // this function mutates directly to product. Proof is that the ID were set after this calling
+      _productRepo.Add(product);
+      _unitOfWork.SaveChanges(); // this function mutates directly to product. Proof is that the ID were set after this calling
 
       var commandReadDto = _mapper.Map<ProductReadDto>(product);
 
@@ -60,14 +62,14 @@ namespace ProductManager.Controllers
     [HttpPut("{id}")]
     public ActionResult<ProductReadDto> UpdateProduct(int id, ProductUpdateDto productUpdateDto)
     {
-      var oldProduct = _repository.GetProductById(id);
+      var oldProduct = _productRepo.GetById(id);
       if (oldProduct == null)
         return NotFound();
 
       // var newProduct = _mapper.Map<Product>(productUpdateDto);
       var newProduct = _mapper.Map(productUpdateDto, oldProduct); // CuteTN note: this will mutate directly to the oldProduct
-      _repository.UpdateProduct(newProduct);
-      _repository.SaveChanges();
+      _productRepo.Update(newProduct);
+      _unitOfWork.SaveChanges();
 
       return Ok(newProduct);
     }
@@ -75,7 +77,7 @@ namespace ProductManager.Controllers
     [HttpPatch("{id}")]
     public ActionResult<ProductReadDto> PatchProduct(int id, JsonPatchDocument<ProductUpdateDto> patchDoc)
     {
-      var oldProduct = _repository.GetProductById(id);
+      var oldProduct = _productRepo.GetById(id);
       if (oldProduct == null)
         return NotFound();
 
@@ -88,8 +90,8 @@ namespace ProductManager.Controllers
       }
 
       var newProduct = _mapper.Map(productToPatch, oldProduct);
-      _repository.UpdateProduct(newProduct);
-      _repository.SaveChanges();
+      _productRepo.Update(newProduct);
+      _unitOfWork.SaveChanges();
 
       return Ok(newProduct);
     }
@@ -97,12 +99,12 @@ namespace ProductManager.Controllers
     [HttpDelete("{id}")]
     public ActionResult<ProductReadDto> DeleteProduct(int id)
     {
-      var oldProduct = _repository.GetProductById(id);
+      var oldProduct = _productRepo.GetById(id);
       if (oldProduct == null)
         return NotFound();
 
-      _repository.DeleteProduct(oldProduct);
-      _repository.SaveChanges();
+      _productRepo.Delete(oldProduct);
+      _unitOfWork.SaveChanges();
 
       return Ok(_mapper.Map<ProductReadDto>(oldProduct));
     }
@@ -110,19 +112,19 @@ namespace ProductManager.Controllers
     [HttpPut("{id}/categories")]
     public ActionResult<ProductReadDto> SetProductCategories(int id, IEnumerable<int> categoriesIds)
     {
-      var oldProduct = _repository.GetProductById(id);
+      var oldProduct = _productRepo.GetById(id);
       if (oldProduct == null)
         return NotFound();
 
       var categoriesIdsList = categoriesIds.ToList();
-      var categories = categoriesIdsList.Select(id => _categoryRepo.GetCategoryById(id)).ToList();
+      var categories = categoriesIdsList.Select(id => _categoryRepo.GetById(id)).ToList();
 
       for (int i = 0; i < categories.Count(); i++)
         if (categories[i] == null)
           return NotFound();
 
-      _repository.SetProductCategories(oldProduct, categories);
-      _repository.SaveChanges();
+      Services.CategoryProduct.SetCategoriesOfProduct(oldProduct, categories);
+      _unitOfWork.SaveChanges();
 
       return Ok(_mapper.Map<ProductReadDto>(oldProduct));
     }

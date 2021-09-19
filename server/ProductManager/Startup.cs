@@ -21,6 +21,8 @@ namespace ProductManager
 {
   public class Startup
   {
+    readonly string angularLocalhostOrigin = "AngularLocalhostOrigin";
+
     public Startup(IConfiguration configuration)
     {
       Configuration = configuration;
@@ -31,6 +33,15 @@ namespace ProductManager
     // This method gets called by the runtime. Use this method to add services to the container.
     public void ConfigureServices(IServiceCollection services)
     {
+      services.AddCors(opt =>
+        opt.AddPolicy(angularLocalhostOrigin, builder => 
+          builder.WithOrigins("http://localhost:4200")
+            .AllowAnyMethod()
+            .AllowAnyHeader()
+            .AllowCredentials()
+        )
+      );
+
       services.AddDbContext<Context>(opt =>
         opt
           .UseLazyLoadingProxies()
@@ -38,25 +49,29 @@ namespace ProductManager
       );
 
       services.AddControllers()
-              .AddNewtonsoftJson(s =>
-                {
-                  s.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
-                  s.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
-                }
-              );
+        .AddNewtonsoftJson(s =>
+          {
+            s.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
+            s.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
+          }
+        );
       ;
 
       services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
       // Auto choose concrete implementation for IProductRepository
-      services.AddScoped<IProductRepository, SqlProductRepository>();
-      services.AddScoped<ICategoryRepository, SqlCategoryRepository>();
+      // services.AddScoped<IProductRepository, SqlProductRepository>();
+      // services.AddScoped<ICategoryRepository, SqlCategoryRepository>();
+      services.AddScoped<UnitOfWork, UnitOfWork>();
 
       services.AddSwaggerGen(c =>
       {
         c.SwaggerDoc("v1", new OpenApiInfo { Title = "ProductManager", Version = "v1" });
       });
     }
+
+
+
 
     // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
     public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -81,6 +96,8 @@ namespace ProductManager
       app.UseHttpsRedirection();
 
       app.UseRouting();
+
+      app.UseCors(angularLocalhostOrigin);
 
       app.UseAuthorization();
 
