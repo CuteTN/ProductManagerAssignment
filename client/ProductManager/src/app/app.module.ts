@@ -14,16 +14,17 @@ import { AppErrorHandler } from './core/errors';
 import * as Components from './components';
 import { AppRouterModule } from './core/routers/app-router.module';
 import { AppAngularMaterialModule } from './core/materials/app-angular-mat.module';
-import { ProductsTableComponent } from './components/common/products-table/products-table.component';
 
 @NgModule({
   declarations: [
     Components.ProductsPageComponent,
     Components.HomePageComponent,
     Components.NotFoundPageComponent,
+    Components.ProductEditorPageComponent,
+    Components.ProductsTableComponent,
+    Components.ProductEditorFormComponent,
     
     AppComponent,
-          ProductsTableComponent,
   ],
   imports: [
     BrowserModule,

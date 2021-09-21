@@ -4,11 +4,11 @@ import { Store } from '@ngrx/store';
 import { AppState } from 'src/app/app.state';
 
 @Component({
-  selector: 'not-found-page',
-  templateUrl: './not-found-page.component.html',
-  styleUrls: ['./not-found-page.component.css']
+  selector: 'product-editor-page',
+  templateUrl: './product-editor-page.component.html',
+  styleUrls: ['./product-editor-page.component.css'],
 })
-export class NotFoundPageComponent {
+export class ProductEditorPageComponent {
   constructor(private router: Router) {}
 
   handleToHomeClick() {

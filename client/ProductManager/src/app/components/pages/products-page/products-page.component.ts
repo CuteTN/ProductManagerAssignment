@@ -41,7 +41,7 @@ export class ProductsPageComponent implements OnInit {
   }
 
   handleAddProductClick() {
-    // TODO
+    this.router.navigate(['product/editor']);
   }
 
   handleEditProductClick(product: Product) {

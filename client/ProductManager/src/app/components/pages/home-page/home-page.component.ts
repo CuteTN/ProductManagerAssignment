@@ -17,6 +17,6 @@ export class HomePageComponent implements OnInit {
   }
 
   handleAddProductClick() {
-    // TODO
+    this.router.navigate(['product/editor']);
   }
 }
