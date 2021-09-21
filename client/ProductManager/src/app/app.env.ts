@@ -1,0 +1,1 @@
+export const LOCAL_SERVER_URL = "https://localhost:5001";
