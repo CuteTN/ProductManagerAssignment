@@ -1,0 +1,12 @@
+<button class="btn btn-secondary m-1" (click)="handleToHomeClick()">
+  Back home
+</button>
+<button class="btn btn-success m-1" (click)="handleAddProductClick()">
+  New product
+</button>
+
+<products-table
+  [products]="products$ | async"
+  (on-edit-product)="handleEditProductClick($event)"
+  (on-remove-product)="handleRemoveProductClick($event)"
+></products-table>

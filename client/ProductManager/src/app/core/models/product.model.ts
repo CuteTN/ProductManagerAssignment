@@ -10,7 +10,7 @@ export interface Product {
   price: number | null,
   supplierId: number | null,
 
-  category: Category[] | null,
-  supplier: Supplier,
-  productDetail: ProductDetail,
+  categories: Category[] | null,
+  supplier: Supplier | null,
+  productDetail: ProductDetail | null,
 }
