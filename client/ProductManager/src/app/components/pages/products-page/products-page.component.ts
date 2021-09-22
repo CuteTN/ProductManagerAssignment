@@ -16,6 +16,11 @@ import { SetProductsAction } from 'src/app/core/store/actions';
 export class ProductsPageComponent implements OnInit {
   products$: Observable<Product[]>;
 
+  private _isProductsLoaded: boolean = false;
+  public get isProductsLoaded() {
+    return this._isProductsLoaded;
+  }
+
   constructor(
     private productApiService: ProductApiService,
     private store: Store<AppState>,
@@ -29,6 +34,7 @@ export class ProductsPageComponent implements OnInit {
       (response) => {
         this.store.dispatch(new SetProductsAction(response as Product[]));
         sub.unsubscribe(); // unsubscibed as soon as the response is received
+        this._isProductsLoaded = true;
       },
       (error: DataQueryError) => {
         throw error;
@@ -45,10 +51,10 @@ export class ProductsPageComponent implements OnInit {
   }
 
   handleEditProductClick(product: Product) {
-    console.log("Edit product", product.id);
+    console.log('Edit product', product.id);
   }
 
   handleRemoveProductClick(product: Product) {
-    console.log("Remove product", product.id);
+    console.log('Remove product', product.id);
   }
 }
