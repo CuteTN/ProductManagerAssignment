@@ -9,11 +9,13 @@ import { productsReducer } from './core/store/reducers';
 import { ProductApiService } from './core/services';
 import { HttpClientModule } from '@angular/common/http';
 import { AppErrorHandler } from './core/errors';
+import { MatDatepickerModule } from '@angular/material/datepicker';
 
 // components ///////////////////////////////////////////////////////////
 import * as Components from './components';
 import { AppRouterModule } from './core/routers/app-router.module';
 import { AppAngularMaterialModule } from './core/materials/app-angular-mat.module';
+import { ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [
@@ -31,6 +33,7 @@ import { AppAngularMaterialModule } from './core/materials/app-angular-mat.modul
     AppRoutingModule,
     BrowserAnimationsModule,
     HttpClientModule,
+    ReactiveFormsModule,
     StoreModule.forRoot({
       products: productsReducer,
     }),
@@ -40,6 +43,7 @@ import { AppAngularMaterialModule } from './core/materials/app-angular-mat.modul
   providers: [
     ProductApiService,
     { provide: ErrorHandler, useClass: AppErrorHandler},
+    MatDatepickerModule,
   ],
   bootstrap: [AppComponent]
 })

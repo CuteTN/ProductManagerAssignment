@@ -8,7 +8,7 @@
 <div *ngIf="isProductsLoaded; then productsTable; else loading"></div>
 
 <ng-template #productsTable>
-  <div class="mx-5 my-3" style="color:  pink;">
+  <div class="mx-5 my-3">
     <products-table
       [products]="products$ | async"
       (on-edit-product)="handleEditProductClick($event)"
