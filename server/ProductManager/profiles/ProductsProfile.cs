@@ -9,27 +9,25 @@ namespace ProductManager.Profiles
   {
     public ProductProfile()
     {
-      CreateMap<Product, ProductReadDto>()
-        .ForMember(dest => dest.Categories, opt => opt.MapFrom(src =>
-          src.Categories.ToList().Select(c => new Category
-          {
-            Id = c.Id,
-            Name = c.Name,
-          }
-          )
-        ))
-        .ForMember(dest => dest.ProductDetail, opt => opt.MapFrom(src =>
-          new ProductDetail
-          {
-            ProductId = src.ProductDetail.ProductId,
-            Details = src.ProductDetail.Details,
-          }
-        ))
-        .ForMember(dest => dest.Supplier, opt => opt.MapFrom(src => src.Supplier));
-
+      CreateMap<Product, ProductReadDto>();
+      CreateMap<Product, ProductMinReadDto>()
+        .ForMember(dest => dest.CategoryIds, opt => opt.MapFrom(src => src.Categories.Select(c => c.Id)));
       CreateMap<ProductCreateDto, Product>();
       CreateMap<ProductUpdateDto, Product>();
       CreateMap<Product, ProductUpdateDto>();
+
+
+      CreateMap<Category, CategoryReadDto>();
+      CreateMap<Category, CategoryMinReadDto>()
+        .ForMember(dest => dest.ProductIds, opt => opt.MapFrom(src => src.Products.Select(p => p.Id)));
+
+
+      CreateMap<ProductDetail, ProductDetailReadDto>();
+      CreateMap<ProductDetail, ProductDetailMinReadDto>();
+
+
+      CreateMap<Supplier, SupplierReadDto>();
+      CreateMap<Supplier, SupplierMinReadDto>();
     }
   }
 }

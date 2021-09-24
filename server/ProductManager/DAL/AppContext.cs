@@ -3,10 +3,11 @@ using ProductManager.Models;
 
 namespace ProductManager.DAL
 {
-  public class Context : DbContext
+  public class AppContext : DbContext
   {
-    public Context(DbContextOptions<Context> opt) : base(opt)
-    { }
+    public AppContext(DbContextOptions<AppContext> opt) : base(opt)
+    {
+    }
 
     public DbSet<Product> Products { get; set; }
     public DbSet<ProductDetail> ProductDetails { get; set; }

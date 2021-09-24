@@ -34,7 +34,7 @@ namespace ProductManager
     public void ConfigureServices(IServiceCollection services)
     {
       services.AddCors(opt =>
-        opt.AddPolicy(angularLocalhostOrigin, builder => 
+        opt.AddPolicy(angularLocalhostOrigin, builder =>
           builder.WithOrigins("http://localhost:4200")
             .AllowAnyMethod()
             .AllowAnyHeader()
@@ -42,7 +42,7 @@ namespace ProductManager
         )
       );
 
-      services.AddDbContext<Context>(opt =>
+      services.AddDbContext<DAL.AppContext>(opt =>
         opt
           .UseLazyLoadingProxies()
           .UseSqlServer(Configuration.GetConnectionString("ProductConnection"))
@@ -50,10 +50,10 @@ namespace ProductManager
 
       services.AddControllers()
         .AddNewtonsoftJson(s =>
-          {
-            s.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
-            s.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
-          }
+        {
+          s.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
+          s.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
+        }
         );
       ;
 

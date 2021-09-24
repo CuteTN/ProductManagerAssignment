@@ -18,12 +18,12 @@ namespace ProductManager.Dtos
     public DateTime? ReleaseDate { get; set; }
     public DateTime? DiscontinuedDate { get; set; }
 
-    public virtual ICollection<Category> Categories { get; set; }
+    public virtual ICollection<CategoryMinReadDto> Categories { get; set; }
 
     [ForeignKey("Supplier")]
     public int? SupplierId { get; set; }
-    public virtual Supplier Supplier { get; set; }
+    public virtual SupplierMinReadDto Supplier { get; set; }
 
-    public virtual ProductDetail ProductDetail { get; set; }
+    public virtual ProductDetailMinReadDto ProductDetail { get; set; }
   }
 }

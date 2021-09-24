@@ -6,10 +6,10 @@ namespace ProductManager.DAL
 {
   public class GenericRepository<TEntity> where TEntity : class
   {
-    private readonly Context _context;
+    private readonly AppContext _context;
     private DbSet<TEntity> dbSet;
 
-    public GenericRepository(Context context)
+    public GenericRepository(AppContext context)
     {
       _context = context;
       dbSet = _context.Set<TEntity>();

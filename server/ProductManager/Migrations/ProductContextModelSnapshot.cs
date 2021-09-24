@@ -8,7 +8,7 @@ using ProductManager.DAL;
 
 namespace ProductManager.Migrations
 {
-    [DbContext(typeof(Context))]
+    [DbContext(typeof(DAL.AppContext))]
     partial class ProductContextModelSnapshot : ModelSnapshot
     {
         protected override void BuildModel(ModelBuilder modelBuilder)

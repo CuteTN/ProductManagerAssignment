@@ -5,9 +5,9 @@ namespace ProductManager.DAL
 {
   public class UnitOfWork : IDisposable
   {
-    private Context _context;
+    private AppContext _context;
 
-    public UnitOfWork(Context context)
+    public UnitOfWork(AppContext context)
     {
       _context = context;
     }
