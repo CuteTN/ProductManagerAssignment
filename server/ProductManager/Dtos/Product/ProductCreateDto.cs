@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -22,5 +23,10 @@ namespace ProductManager.Dtos
 
     [ForeignKey("Supplier")]
     public int? SupplierId { get; set; }
+
+    public virtual ICollection<int> CategoryIds { get; set; }
+
+    public virtual ProductDetailCreateDto ProductDetail { get; set; }
+
   }
 }

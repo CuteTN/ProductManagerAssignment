@@ -2,7 +2,7 @@ using System;
 
 namespace ProductManager.Dtos
 {
-  public class ProductDetailCreateDto
+  public class ProductDetailUpdateDto
   {
     public String Details { get; set; }
   }

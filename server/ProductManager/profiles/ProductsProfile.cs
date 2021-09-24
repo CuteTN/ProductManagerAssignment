@@ -24,6 +24,9 @@ namespace ProductManager.Profiles
 
       CreateMap<ProductDetail, ProductDetailReadDto>();
       CreateMap<ProductDetail, ProductDetailMinReadDto>();
+      CreateMap<ProductDetailUpdateDto, ProductDetail>();
+      CreateMap<ProductDetailCreateDto, ProductDetail>();
+      CreateMap<ProductDetailCreateDto, ProductDetailUpdateDto>();
 
 
       CreateMap<Supplier, SupplierReadDto>();
