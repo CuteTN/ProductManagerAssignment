@@ -6,8 +6,8 @@ const PRODUCT_PREFIX = `[PRODUCTS]`;
 
 export const SET_PRODUCTS = `${PRODUCT_PREFIX} SET`;
 export const ADD_A_PRODUCT = `${PRODUCT_PREFIX} ADD`;
-export const EDIT_A_PRODUCT = `${PRODUCT_PREFIX} EDIT`;
-export const REMOVE_A_PRODUCT = `${PRODUCT_PREFIX} REMOVE`;
+export const UPDATE_A_PRODUCT = `${PRODUCT_PREFIX} EDIT`;
+export const DELETE_A_PRODUCT = `${PRODUCT_PREFIX} REMOVE`;
 
 // actions //////////////////////////////////////////////////////////////////////////////////////////////////
 export class SetProductsAction implements Action {
@@ -20,12 +20,12 @@ export class AddAProductAction implements Action {
   constructor (public payload: Product) {};
 }
 
-export class EditAProductAction implements Action {
-  type = EDIT_A_PRODUCT;
+export class UpdateAProductAction implements Action {
+  type = UPDATE_A_PRODUCT;
   constructor (public payload: Product) {};
 }
 
-export class RemoveAProductAction implements Action {
-  type = REMOVE_A_PRODUCT;
+export class DeleteAProductAction implements Action {
+  type = DELETE_A_PRODUCT;
   constructor (public payload: { id: number | null }) {};
 }

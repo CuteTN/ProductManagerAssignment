@@ -13,6 +13,14 @@ export class DataApiService {
 
   getAll = () => this.http.get(this.url).pipe(catchError(this.handleError));
 
+  getById = (id: number) => this.http.get(`${this.url}/${id}`);
+
+  create = (data: any) => this.http.post(this.url, data);
+
+  update = (id: number, newData: any) => this.http.put(`${this.url}/${id}`, newData);
+
+  delete = (id: number) => this.http.delete(`${this.url}/${id}`);
+
   private handleError = (error: Response) => {
     const appErrorType = ERROR_MAPPER[error.status];
     return throwError(new DataQueryError(error, appErrorType));

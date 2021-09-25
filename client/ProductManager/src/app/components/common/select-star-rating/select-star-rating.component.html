@@ -1,0 +1,20 @@
+<!-- [ngStyle]="{
+  'margin-left': '-' + starSize/2 + 'px'
+}" -->
+<!-- [ngStyle]="{
+  'font-size': '' + starSize + 'px',
+  'text-align': 'center'
+}" -->
+<div class="d-flex justify-content-center p-0" 
+>
+  <mat-icon class="selectable-star mx-1"
+    color="accent"
+    
+    *ngFor="let item of numberArray"
+    (mouseenter)="handleStarMouseEnter(item)"
+    (mouseleave)="handleStarMouseLeave(item)"
+    (click)="handleStarClick(item)"
+  >
+    {{ toBeHighlighted(item)? 'star' : 'star_border'}}
+  </mat-icon>
+</div>

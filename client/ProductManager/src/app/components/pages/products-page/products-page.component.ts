@@ -3,10 +3,8 @@ import { Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import { AppState } from 'src/app/app.state';
-import { DataQueryError } from 'src/app/core/errors';
 import { Product } from 'src/app/core/models';
-import { ProductApiService } from 'src/app/core/services';
-import { SetProductsAction } from 'src/app/core/store/actions';
+import { ProductsConnectorService } from 'src/app/core/services/state';
 
 @Component({
   selector: 'products-page',
@@ -15,31 +13,18 @@ import { SetProductsAction } from 'src/app/core/store/actions';
 })
 export class ProductsPageComponent implements OnInit {
   products$: Observable<Product[]>;
-
-  private _isProductsLoaded: boolean = false;
-  public get isProductsLoaded() {
-    return this._isProductsLoaded;
+  get isProductsLoaded() {
+    return this.productsConnector.isLoaded
   }
 
   constructor(
-    private productApiService: ProductApiService,
-    private store: Store<AppState>,
+    private productsConnector: ProductsConnectorService,
     private router: Router
   ) {
-    this.products$ = store.select((state) => state.products);
+    this.products$ = productsConnector.getAll();
   }
 
-  ngOnInit(): void {
-    const sub = this.productApiService.getAll().subscribe(
-      (response) => {
-        this.store.dispatch(new SetProductsAction(response as Product[]));
-        sub.unsubscribe(); // unsubscibed as soon as the response is received
-        this._isProductsLoaded = true;
-      },
-      (error: DataQueryError) => {
-        throw error;
-      }
-    );
+  ngOnInit(): void { 
   }
 
   handleToHomeClick() {
@@ -55,6 +40,7 @@ export class ProductsPageComponent implements OnInit {
   }
 
   handleRemoveProductClick(product: Product) {
-    console.log('Remove product', product.id);
+    if(product.id)
+      this.productsConnector.delete(product.id);
   }
 }

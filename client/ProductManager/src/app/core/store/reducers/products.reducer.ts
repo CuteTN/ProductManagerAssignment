@@ -12,16 +12,16 @@ export function productsReducer(state: Product[] = INITIAL_STATE, action: Action
       return addToArray(state, payload);
     }
 
-    case Actions.EDIT_A_PRODUCT: {
-      const { payload } = action as Actions.EditAProductAction;
+    case Actions.UPDATE_A_PRODUCT: {
+      const { payload } = action as Actions.UpdateAProductAction;
       return addToArray(
         findByIdAndRemoveFromArray(state, payload.id),
         payload
       ) as Product[];
     }    
 
-    case Actions.REMOVE_A_PRODUCT: {
-      const { payload } = action as Actions.RemoveAProductAction;
+    case Actions.DELETE_A_PRODUCT: {
+      const { payload } = action as Actions.DeleteAProductAction;
       return findByIdAndRemoveFromArray(state, payload.id) as Product[];
     }
 

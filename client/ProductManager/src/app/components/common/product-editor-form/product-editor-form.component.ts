@@ -28,8 +28,12 @@ export class ProductEditorFormComponent {
     });
   }
 
+  handleRatingChange(rating: Number | null) {
+    this.form.patchValue({ rating });
+  }
+
   getProduct(): Product {
-    let product: Product = {...this.form.value}
+    let product: Product = { ...this.form.value };
     return product;
   }
 }
