@@ -16,6 +16,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 // components ///////////////////////////////////////////////////////////
 import * as Components from './components';
 import * as Services from './core/services';
+import { AppStoreModule } from './core/store/app-store.module';
 
 @NgModule({
   declarations: [
@@ -35,9 +36,7 @@ import * as Services from './core/services';
     BrowserAnimationsModule,
     HttpClientModule,
     ReactiveFormsModule,
-    StoreModule.forRoot({
-      products: productsReducer,
-    }),
+    AppStoreModule,
     AppRouterModule,
     AppAngularMaterialModule
   ],

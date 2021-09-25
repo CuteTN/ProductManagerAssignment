@@ -16,6 +16,7 @@ using AutoMapper;
 using System.Globalization;
 using Microsoft.AspNetCore.Localization;
 using Newtonsoft.Json.Serialization;
+using Microsoft.AspNetCore.Authentication.Certificate;
 
 namespace ProductManager
 {
@@ -33,6 +34,10 @@ namespace ProductManager
     // This method gets called by the runtime. Use this method to add services to the container.
     public void ConfigureServices(IServiceCollection services)
     {
+      services
+        .AddAuthentication(CertificateAuthenticationDefaults.AuthenticationScheme)
+        .AddCertificate();
+
       services.AddCors(opt =>
         opt.AddPolicy(angularLocalhostOrigin, builder =>
           builder.WithOrigins("http://localhost:4200")
@@ -71,11 +76,11 @@ namespace ProductManager
     }
 
 
-
-
     // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
     public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
     {
+      app.UseAuthentication();
+
       if (env.IsDevelopment())
       {
         app.UseDeveloperExceptionPage();

@@ -30,10 +30,11 @@
             aria-label="Number"
             matInput
             [matAutocomplete]="autocompleteSupplier"
+            formControlName="supplier"
           />
-          <mat-autocomplete #autocompleteSupplier="matAutocomplete">
-            <mat-option *ngFor="let option of [1, 2, 3]" [value]="option">
-              {{ option }}
+          <mat-autocomplete #autocompleteSupplier="matAutocomplete" [displayWith]="getName">
+            <mat-option *ngFor="let supplier of filteredSuppliers$ | async" [value]="supplier">
+              {{ supplier.name }}
             </mat-option>
           </mat-autocomplete>
         </mat-form-field>
@@ -142,5 +143,5 @@
       ></select-star-rating>
     </div>
   </mat-card>
-  <!-- <pre>{{ getProduct() | json }}</pre> -->
+  <pre>{{ getProduct() | json }}</pre>
 </div>
