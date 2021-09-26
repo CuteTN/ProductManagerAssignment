@@ -31,7 +31,7 @@ export class ProductEditorFormComponent implements OnInit {
     this.form.get('categories')?.setValue(categories);
   }
 
-  @Input('initial-data') private _initial?: Product | null | undefined;
+  @Input('initial-product') private _initial?: Product | null | undefined;
 
   constructor(
     formBuilder: FormBuilder,
@@ -141,6 +141,13 @@ export class ProductEditorFormComponent implements OnInit {
 
     product.supplierId = product.supplier?.id;
 
+    delete product.categorySearchedText;
+
     return product;
+  }
+
+  handleSubmitClick() {
+    // console.log(this.getProduct());
+    if (this.form.valid) console.log(this.getProduct());
   }
 }

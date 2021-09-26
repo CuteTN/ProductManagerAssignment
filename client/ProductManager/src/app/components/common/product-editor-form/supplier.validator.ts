@@ -5,7 +5,7 @@ export class SupplierValidators {
   static mustHasIdOrNull(control: AbstractControl): ValidationErrors | null {
     if (!control.value) return null;
 
-    if (!control?.value?.id) return { mustHasId: true };
+    if (!control?.value?.id) return { mustHasIdOrNull: true };
     return null;
   }
 }

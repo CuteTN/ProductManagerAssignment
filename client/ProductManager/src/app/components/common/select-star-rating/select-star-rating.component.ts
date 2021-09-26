@@ -18,6 +18,11 @@ import { MatFormFieldControl } from '@angular/material/form-field';
 })
 export class SelectStarRatingComponent implements OnChanges {
   @Input('max-stars') public maxStars: number = 5;
+
+  @Input('initial-star') public set initialStar(value: number) {
+    this.value = value;
+  }
+
   @Input('star-size') starSize: number = 30;
   @Output('on-value-change') onValueChange = new EventEmitter<number | null>();
 
