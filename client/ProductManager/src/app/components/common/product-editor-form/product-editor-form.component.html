@@ -29,11 +29,17 @@
             placeholder="Select a supplier"
             aria-label="Number"
             matInput
-            [matAutocomplete]="autocompleteSupplier"
+            [matAutocomplete]="supplierAutocomplete"
             formControlName="supplier"
           />
-          <mat-autocomplete #autocompleteSupplier="matAutocomplete" [displayWith]="getName">
-            <mat-option *ngFor="let supplier of filteredSuppliers$ | async" [value]="supplier">
+          <mat-autocomplete
+            #supplierAutocomplete="matAutocomplete"
+            [displayWith]="getName"
+          >
+            <mat-option
+              *ngFor="let supplier of filteredSuppliers$ | async"
+              [value]="supplier"
+            >
               {{ supplier.name }}
             </mat-option>
           </mat-autocomplete>
@@ -104,31 +110,59 @@
       </div>
 
       <div class="row col-12">
-        <mat-label>Favorite Fruits</mat-label>
-        <mat-chip-list #chipList aria-label="Fruit selection">
-          <mat-chip
-            *ngFor="let fruit of ['apple', 'banana', 'mango']"
-            [selectable]="true"
-            [removable]="true"
+        <mat-form-field appearance="fill" class="col">
+          <mat-label>Categories</mat-label>
+          <mat-chip-list #categoriesChipList aria-label="Categories selection">
+            <mat-chip
+              *ngFor="let category of selectedCategories"
+              [selectable]="true"
+              [removable]="true"
+              (removed)="handleRemoveCategory(category)"
             >
-            {{fruit}}
-            <mat-icon matChipRemove *ngIf="true">cancel</mat-icon>
-          </mat-chip>
-          <input
-            placeholder="New fruit..."
-            #fruitInput
-            [matAutocomplete]="auto"
-            [matChipInputFor]="chipList"
+              {{ category.name }}
+              <mat-icon matChipRemove *ngIf="true">cancel</mat-icon>
+            </mat-chip>
+            <input
+              placeholder="New category..."
+              #categoryInput
+              [matAutocomplete]="categoriesAutoComplete"
+              [matChipInputFor]="categoriesChipList"
+              formControlName="categorySearchedText"
+            />
+          </mat-chip-list>
+          <mat-autocomplete
+            autoActiveFirstOption
+            #categoriesAutoComplete="matAutocomplete"
+            [displayWith]="getName"
+            (optionSelected)="
+              handleSelectCategory({
+                event: $event,
+                inputControl: categoryInput
+              })
+            "
           >
-        </mat-chip-list>
-        <mat-autocomplete #auto="matAutocomplete">
-          <mat-option *ngFor="let fruit of ['apple', 'banana', 'mango']" [value]="fruit">
-            {{fruit}}
-          </mat-option>
-        </mat-autocomplete>
+            <mat-option
+              *ngFor="let category of filteredCategories$ | async"
+              [value]="category"
+            >
+              {{ category.name }}
+            </mat-option>
+          </mat-autocomplete>
+        </mat-form-field>
       </div>
 
-      <!-- details -->
+      <div class="row col-12" formGroupName="productDetail">
+        <mat-form-field appearance="fill" class="col">
+          <mat-label>Details</mat-label>
+          <textarea
+            matInput
+            placeholder="Enter the product details"
+            maxlength="500"
+            [mat-autosize]="true"
+            formControlName="details"
+          ></textarea>
+        </mat-form-field>
+      </div>
     </form>
 
     <div class="d-flex row justify-content-center p-2 m-0">
@@ -143,5 +177,5 @@
       ></select-star-rating>
     </div>
   </mat-card>
-  <pre>{{ getProduct() | json }}</pre>
+  <!-- <pre>{{ getProduct() | json }}</pre> -->
 </div>

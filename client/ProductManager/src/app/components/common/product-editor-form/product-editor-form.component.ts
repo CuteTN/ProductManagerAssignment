@@ -1,5 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 import { combineLatest, Observable } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
 import { Category, Product, Supplier } from 'src/app/core/models';
@@ -14,12 +15,21 @@ import { SupplierValidators } from './supplier.validator';
   templateUrl: './product-editor-form.component.html',
   styleUrls: ['./product-editor-form.component.css'],
 })
-export class ProductEditorFormComponent implements OnInit{
+export class ProductEditorFormComponent implements OnInit {
   form: FormGroup;
-  categories$: Observable<Category[]>;
 
   suppliers$: Observable<Supplier[]>;
   filteredSuppliers$?: Observable<Supplier[]>;
+
+  categories$: Observable<Category[]>;
+  filteredCategories$?: Observable<Category[]>;
+  get selectedCategories(): Category[] {
+    const result = this.form.get('categories')?.value as Category[];
+    return result ?? [];
+  }
+  set selectedCategories(categories: Category[]) {
+    this.form.get('categories')?.setValue(categories);
+  }
 
   @Input('initial-data') private _initial?: Product | null | undefined;
 
@@ -36,10 +46,11 @@ export class ProductEditorFormComponent implements OnInit{
       discontinuedDate: [undefined, [Validators.required]],
       rating: [undefined, [Validators.min(1), Validators.max(5)]],
       price: [undefined, [Validators.required, Validators.max(1e9)]],
-      supplier: [undefined, [SupplierValidators.mustHasId]],
-      categories: formBuilder.array([]),
+      supplier: [undefined, [SupplierValidators.mustHasIdOrNull]],
+      categorySearchedText: [undefined],
+      categories: [[]],
       productDetail: formBuilder.group({
-        detail: [undefined, [Validators.maxLength(500)]],
+        details: [undefined, [Validators.maxLength(500)]],
       }),
     });
 
@@ -55,26 +66,66 @@ export class ProductEditorFormComponent implements OnInit{
         supplierControl.valueChanges.pipe(startWith('')),
       ]).pipe(
         map(([suppliers, searchedName]) =>
-          this.filterSuppliers(suppliers, searchedName)
+          this.filterByName(suppliers, searchedName)
+        )
+      );
+
+    // const categoriesControl = this.form.get('categories');
+    const categorySearchedTextControl = this.form.get('categorySearchedText');
+    if (categorySearchedTextControl)
+      this.filteredCategories$ = combineLatest([
+        this.categories$,
+        categorySearchedTextControl.valueChanges.pipe(startWith('')),
+      ]).pipe(
+        map(([categories, searchedName]) =>
+          this.filterByName(categories, searchedName).filter((category) =>
+            (this.selectedCategories as Category[]).every(
+              (selectedCategory) => selectedCategory.id !== category.id
+            )
+          )
         )
       );
   }
 
-  private filterSuppliers(suppliers: Supplier[], searchedName: any) {
-    return suppliers.filter((supplier) => {
+  private filterByName<
+    TItem extends { id: number | null; name: string | null }
+  >(items: TItem[], searchedName: any) {
+    return items.filter((item) => {
+      if (!searchedName) return true;
+
       if (typeof searchedName === 'string')
-        return supplier.name
-          ?.toLowerCase()
-          .includes(searchedName.toLowerCase());
+        return item.name?.toLowerCase().includes(searchedName.toLowerCase());
       else if (typeof searchedName === 'object' && searchedName.id)
-        return supplier.id === searchedName.id;
+        return item.id === searchedName.id;
 
       return true;
-    })
+    });
   }
 
   getName(obj: any) {
     return (obj?.name ?? '') as string;
+  }
+
+  handleSelectCategory({
+    event,
+    inputControl,
+  }: {
+    event: MatAutocompleteSelectedEvent;
+    inputControl: HTMLInputElement;
+  }) {
+    const newCategory = event.option.value;
+
+    if (newCategory?.id && newCategory?.name) {
+      this.selectedCategories.push(newCategory);
+      this.form.get('categorySearchedText')?.setValue(null);
+      inputControl.value = '';
+    }
+  }
+
+  handleRemoveCategory(category: Category) {
+    this.selectedCategories = this.selectedCategories.filter(
+      (c) => c.id !== category.id
+    );
   }
 
   handleRatingChange(rating: Number | null) {
@@ -82,7 +133,14 @@ export class ProductEditorFormComponent implements OnInit{
   }
 
   getProduct(): Product {
-    let product: Product = { ...this.form.value };
+    let product = { ...this.form.value };
+
+    product.categoryId = product.categories?.map(
+      (category: Category) => category.id
+    );
+
+    product.supplierId = product.supplier?.id;
+
     return product;
   }
 }

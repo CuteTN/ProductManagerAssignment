@@ -11,6 +11,7 @@ import { MatNativeDateModule } from '@angular/material/core';
 import { MatSelectModule } from '@angular/material/select';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatChipsModule } from '@angular/material/chips';
+import { MatDividerModule } from '@angular/material/divider';
 
 const MODULES_LIST = [
   MatTableModule,
@@ -25,6 +26,7 @@ const MODULES_LIST = [
   MatSelectModule,
   MatAutocompleteModule,
   MatChipsModule,
+  MatDividerModule,
 ];
 
 @NgModule({

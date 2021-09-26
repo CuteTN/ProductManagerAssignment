@@ -22,7 +22,7 @@ export class ProductsTableComponent {
     'price',
     'supplier',
     'categories',
-    'detail',
+    'details',
     'actions',
   ];
 
