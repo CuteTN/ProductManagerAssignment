@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 import { combineLatest, Observable } from 'rxjs';
@@ -16,6 +16,10 @@ import { SupplierValidators } from './supplier.validator';
   styleUrls: ['./product-editor-form.component.css'],
 })
 export class ProductEditorFormComponent implements OnInit {
+  @Input('initial-product') initial?: Product | null;
+
+  @Output('on-submit') private onSubmit = new EventEmitter<Product>()
+
   form: FormGroup;
 
   suppliers$: Observable<Supplier[]>;
@@ -24,14 +28,20 @@ export class ProductEditorFormComponent implements OnInit {
   categories$: Observable<Category[]>;
   filteredCategories$?: Observable<Category[]>;
   get selectedCategories(): Category[] {
-    const result = this.form.get('categories')?.value as Category[];
-    return result ?? [];
+    const result = this.form.get('categories')!.value as Category[];
+
+    if(!result) {
+      const newArr: Category[] = [];
+      this.form.get('categories')!.setValue(newArr);
+
+      return newArr;
+    }
+
+    return result;
   }
   set selectedCategories(categories: Category[]) {
     this.form.get('categories')?.setValue(categories);
   }
-
-  @Input('initial-product') private _initial?: Product | null | undefined;
 
   constructor(
     formBuilder: FormBuilder,
@@ -59,6 +69,8 @@ export class ProductEditorFormComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.initFormValue();
+
     const supplierControl = this.form.get('supplier');
     if (supplierControl)
       this.filteredSuppliers$ = combineLatest([
@@ -146,8 +158,18 @@ export class ProductEditorFormComponent implements OnInit {
     return product;
   }
 
+  initFormValue() {
+    this.form.reset(this.initial);
+    this.form.markAsPristine();
+  }
+
+  handleResetFormClick() {
+    this.initFormValue();
+  }
+
   handleSubmitClick() {
-    // console.log(this.getProduct());
-    if (this.form.valid) console.log(this.getProduct());
+    if (this.form.valid) {
+      this.onSubmit.emit(this.getProduct());
+    }
   }
 }

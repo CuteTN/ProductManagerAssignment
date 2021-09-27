@@ -3,5 +3,8 @@
 </button>
 
 <div class="mx-5 my-3">
-  <product-editor-form></product-editor-form>
+  <product-editor-form
+    [initial-product]="productToEdit"
+    (on-submit)="handleSubmitProduct($event)"
+  ></product-editor-form>
 </div>

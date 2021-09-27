@@ -12,7 +12,7 @@ import { ProductsConnectorService } from 'src/app/core/services/state';
 export class ProductsPageComponent implements OnInit {
   products$: Observable<Product[]>;
   get isProductsLoaded() {
-    return this.productsConnector.isLoaded
+    return this.productsConnector.isLoaded;
   }
 
   constructor(
@@ -22,8 +22,7 @@ export class ProductsPageComponent implements OnInit {
     this.products$ = productsConnector.getAll();
   }
 
-  ngOnInit(): void { 
-  }
+  ngOnInit(): void {}
 
   handleToHomeClick() {
     this.router.navigate(['']);
@@ -34,11 +33,10 @@ export class ProductsPageComponent implements OnInit {
   }
 
   handleEditProductClick(product: Product) {
-    console.log('Edit product', product.id);
+    this.router.navigate(['product/editor'], { state: { product } });
   }
 
   handleRemoveProductClick(product: Product) {
-    if(product.id)
-      this.productsConnector.delete(product.id);
+    if (product.id) this.productsConnector.delete(product.id);
   }
 }
