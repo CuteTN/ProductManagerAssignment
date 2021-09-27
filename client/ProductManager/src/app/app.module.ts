@@ -13,8 +13,8 @@ import { ReactiveFormsModule } from '@angular/forms';
 
 // components ///////////////////////////////////////////////////////////
 import * as Components from './components';
-import * as Services from './core/services';
 import { AppStoreModule } from './core/ngrx/app-store.module';
+import * as Services from './core/services';
 
 @NgModule({
   declarations: [
@@ -25,7 +25,8 @@ import { AppStoreModule } from './core/ngrx/app-store.module';
     Components.ProductsTableComponent,
     Components.ProductEditorFormComponent,
     Components.SelectStarRatingComponent,
-    
+    Components.MyDialogComponent,
+
     AppComponent,
   ],
   imports: [
@@ -36,12 +37,20 @@ import { AppStoreModule } from './core/ngrx/app-store.module';
     ReactiveFormsModule,
     AppStoreModule,
     AppRouterModule,
-    AppAngularMaterialModule
+    AppAngularMaterialModule,
   ],
   providers: [
-    { provide: ErrorHandler, useClass: AppErrorHandler},
+    Services.StateStoreService,
+    Services.CategoriesStoreService,
+    Services.CategoryApiService,
+    Services.ProductsStoreService,
+    Services.ProductApiService,
+    Services.SuppliersStoreService,
+    Services.SupplierApiService,
+
+    { provide: ErrorHandler, useClass: AppErrorHandler },
     MatDatepickerModule,
   ],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
 })
-export class AppModule { }
+export class AppModule {}

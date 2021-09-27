@@ -13,9 +13,11 @@ import { DataApiService } from '../apis/data-api.service';
 })
 export class StateStoreService<TItem> {
   apiService?: DataApiService;
-  
+
   private _isLoaded: boolean = false;
-  get isLoaded() { return this._isLoaded; }
+  get isLoaded() {
+    return this._isLoaded;
+  }
 
   private _value: Observable<TItem[]>;
 
@@ -33,17 +35,19 @@ export class StateStoreService<TItem> {
   protected createUpdateAction?: (item: TItem, ...opt: any) => Action;
   protected createDeleteAction?: (id: number, ...opt: any) => Action;
 
-  fetchAll() {
+  fetchAll(onSuccess?: SuccessHandler, onError?: ErrorHandler) {
     const sub = this.apiService?.getAll().subscribe(
       (response) => {
         const action = this.createSetAllAction?.(response as TItem[]);
         if (action) this.store.dispatch(action);
         this._isLoaded = true;
 
+        onSuccess?.(response);
         sub?.unsubscribe();
       },
       (error) => {
-        throw error;
+        if (onError) onError(error);
+        else throw error;
       }
     );
   }
@@ -60,51 +64,76 @@ export class StateStoreService<TItem> {
     if (action) this.store.dispatch(action);
   }
 
-  add(item: TItem, ...opt: any) {
-    const sub = this.apiService?.create(item);
-
-    sub?.subscribe(
+  add(
+    item: TItem,
+    onSuccess?: SuccessHandler,
+    onError?: ErrorHandler,
+    ...opt: any
+  ) {
+    const sub = this.apiService?.create(item).subscribe(
       (response) => {
         const action = this.createAddAction?.(response as TItem, opt);
         if (action) this.store.dispatch(action);
+
+        onSuccess?.(response);
+        sub?.unsubscribe();
       },
       (error) => {
-        throw error;
+        if (onError) onError(error);
+        else throw error;
       }
     );
 
     return sub;
   }
 
-  update(id: number, item: TItem, ...opt: any) {
-    const sub = this.apiService?.update(id, item);
-
-    sub?.subscribe(
+  update(
+    id: number,
+    item: TItem,
+    onSuccess?: SuccessHandler,
+    onError?: ErrorHandler,
+    ...opt: any
+  ) {
+    const sub = this.apiService?.update(id, item).subscribe(
       (response) => {
         const action = this.createUpdateAction?.(response as TItem, opt);
         if (action) this.store.dispatch(action);
+
+        onSuccess?.(response);
+        sub?.unsubscribe();
       },
       (error) => {
-        throw error;
+        if (onError) onError(error);
+        else throw error;
       }
     );
 
     return sub;
   }
 
-  delete(id: number, ...opt: any) {
-    const sub = this.apiService?.delete(id);
-
-    sub?.subscribe(
-      () => {
+  delete(
+    id: number,
+    onSuccess?: SuccessHandler,
+    onError?: ErrorHandler,
+    ...opt: any
+  ) {
+    const sub = this.apiService?.delete(id).subscribe(
+      (response) => {
         const action = this.createDeleteAction?.(id, opt);
         if (action) this.store.dispatch(action);
+
+        onSuccess?.(response);
+        sub?.unsubscribe();
       },
       (error) => {
-        throw error;
+        if (onError) onError(error);
+        else throw error;
       }
-    )
+    );
 
     return sub;
   }
 }
+
+type SuccessHandler = (response: any) => void;
+type ErrorHandler = (error: any) => void;

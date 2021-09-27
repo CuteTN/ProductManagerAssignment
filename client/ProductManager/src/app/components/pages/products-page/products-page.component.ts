@@ -1,8 +1,10 @@
 import { Component, OnInit } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { Product } from 'src/app/core/models';
 import { ProductsStoreService } from 'src/app/core/services/store';
+import { MyDialogComponent, MyDialogData } from '../..';
 
 @Component({
   selector: 'products-page',
@@ -16,6 +18,7 @@ export class ProductsPageComponent implements OnInit {
   }
 
   constructor(
+    private dialog: MatDialog,
     private productsStore: ProductsStoreService,
     private router: Router
   ) {
@@ -28,15 +31,23 @@ export class ProductsPageComponent implements OnInit {
     this.router.navigate(['']);
   }
 
-  handleAddProductClick() {
+  handleAddProductClick = () => {
     this.router.navigate(['product/editor']);
-  }
+  };
 
-  handleEditProductClick(product: Product) {
+  handleEditProductClick = (product: Product) => {
     this.router.navigate(['product/editor'], { state: { product } });
-  }
+  };
 
-  handleRemoveProductClick(product: Product) {
-    if (product.id) this.productsStore.delete(product.id);
-  }
+  handleRemoveProductClick = (product: Product) => {
+    if (product.id)
+      if (
+        confirm(`Are you sure to delete the product with ID = ${product.id}?`)
+      )
+        this.productsStore.delete(
+          product.id,
+          () => alert('The product was removed successfully'),
+          () => alert('Something went wrong!')
+        );
+  };
 }

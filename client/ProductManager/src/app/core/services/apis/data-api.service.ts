@@ -13,13 +13,13 @@ export class DataApiService {
 
   getAll = () => this.http.get(this.url).pipe(catchError(this.handleError));
 
-  getById = (id: number) => this.http.get(`${this.url}/${id}`);
+  getById = (id: number) => this.http.get(`${this.url}/${id}`).pipe(catchError(this.handleError));
 
-  create = (data: any) => this.http.post(this.url, data);
+  create = (data: any) => this.http.post(this.url, data).pipe(catchError(this.handleError));
 
-  update = (id: number, newData: any) => this.http.put(`${this.url}/${id}`, newData);
+  update = (id: number, newData: any) => this.http.put(`${this.url}/${id}`, newData).pipe(catchError(this.handleError));
 
-  delete = (id: number) => this.http.delete(`${this.url}/${id}`);
+  delete = (id: number) => this.http.delete(`${this.url}/${id}`).pipe(catchError(this.handleError));
 
   private handleError = (error: Response) => {
     const appErrorType = ERROR_MAPPER[error.status];
