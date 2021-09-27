@@ -5,8 +5,8 @@ import { combineLatest, Observable } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
 import { Category, Product, Supplier } from 'src/app/core/models';
 import {
-  CategoriesConnectorService,
-  SuppliersConnectorService,
+  CategoriesStoreService,
+  SuppliersStoreService,
 } from 'src/app/core/services';
 import { SupplierValidators } from './supplier.validator';
 
@@ -45,8 +45,8 @@ export class ProductEditorFormComponent implements OnInit {
 
   constructor(
     formBuilder: FormBuilder,
-    suppliersConnector: SuppliersConnectorService,
-    categoriesConnector: CategoriesConnectorService
+    suppliersStore: SuppliersStoreService,
+    categoriesStore: CategoriesStoreService
   ) {
     this.form = formBuilder.group({
       id: [undefined],
@@ -64,8 +64,8 @@ export class ProductEditorFormComponent implements OnInit {
       }),
     });
 
-    this.categories$ = categoriesConnector.getAll();
-    this.suppliers$ = suppliersConnector.getAll();
+    this.categories$ = categoriesStore.getAll();
+    this.suppliers$ = suppliersStore.getAll();
   }
 
   ngOnInit(): void {

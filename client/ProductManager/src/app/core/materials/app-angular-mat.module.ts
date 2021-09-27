@@ -12,6 +12,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatDividerModule } from '@angular/material/divider';
+import { MatDialogModule } from '@angular/material/dialog';
 
 const MODULES_LIST = [
   MatTableModule,
@@ -27,6 +28,7 @@ const MODULES_LIST = [
   MatAutocompleteModule,
   MatChipsModule,
   MatDividerModule,
+  MatDialogModule,
 ];
 
 @NgModule({

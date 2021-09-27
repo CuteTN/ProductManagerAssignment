@@ -1,15 +1,15 @@
 import { Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { AppState } from 'src/app/app.state';
-import { StateConnectorService } from '.';
+import { StateStoreService } from '.';
 import { ProductApiService } from '..';
 import { Product } from '../../models';
-import * as Actions from '../../store/actions';
+import * as Actions from '../../ngrx/actions';
 
 @Injectable({
   providedIn: 'root'
 })
-export class ProductsConnectorService extends StateConnectorService<Product> {
+export class ProductsStoreService extends StateStoreService<Product> {
   constructor(
     apiService: ProductApiService,
     store: Store<AppState>

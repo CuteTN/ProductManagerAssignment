@@ -11,7 +11,7 @@ import { DataApiService } from '../apis/data-api.service';
 @Injectable({
   providedIn: 'root',
 })
-export class StateConnectorService<TItem> {
+export class StateStoreService<TItem> {
   apiService?: DataApiService;
   
   private _isLoaded: boolean = false;

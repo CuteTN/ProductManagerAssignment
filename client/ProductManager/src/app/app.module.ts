@@ -4,8 +4,6 @@ import { BrowserModule } from '@angular/platform-browser';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { StoreModule } from '@ngrx/store';
-import { productsReducer } from './core/store/reducers';
 import { HttpClientModule } from '@angular/common/http';
 import { AppErrorHandler } from './core/errors';
 import { MatDatepickerModule } from '@angular/material/datepicker';
@@ -16,7 +14,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 // components ///////////////////////////////////////////////////////////
 import * as Components from './components';
 import * as Services from './core/services';
-import { AppStoreModule } from './core/store/app-store.module';
+import { AppStoreModule } from './core/ngrx/app-store.module';
 
 @NgModule({
   declarations: [
@@ -41,11 +39,6 @@ import { AppStoreModule } from './core/store/app-store.module';
     AppAngularMaterialModule
   ],
   providers: [
-    Services.ProductApiService,
-    Services.SupplierApiService,
-    Services.CategoryApiService,
-    Services.ProductsConnectorService,
-
     { provide: ErrorHandler, useClass: AppErrorHandler},
     MatDatepickerModule,
   ],
