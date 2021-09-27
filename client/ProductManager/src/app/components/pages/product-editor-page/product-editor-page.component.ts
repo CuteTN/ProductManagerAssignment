@@ -12,8 +12,11 @@ export class ProductEditorPageComponent implements OnInit {
   // undefined if in add mode
   productToEdit?: Product;
 
-  constructor(private router: Router, private productStore: ProductsStoreService) {}
-  
+  constructor(
+    private router: Router,
+    private productStore: ProductsStoreService
+  ) {}
+
   ngOnInit(): void {
     this.productToEdit = history.state.product;
   }
@@ -24,15 +27,31 @@ export class ProductEditorPageComponent implements OnInit {
 
   handleSubmitProduct(product: Product) {
     // if editting mode else add mode
-    if(this.productToEdit?.id) {
-      this.productStore.update(this.productToEdit.id, product);
+    if (this.productToEdit?.id) {
+      if (
+        confirm(
+          `Are you sure to update the product with ID = ${this.productToEdit.id}?`
+        )
+      )
+        this.productStore.update(
+          this.productToEdit.id,
+          product,
+          () => {
+            alert('The product was updated successfully');
+            this.router.navigate(['products']);
+          },
+          () => alert('Something went wrong!')
+        );
     } else {
-      this.productStore.add(product);
+      if (confirm(`Are you sure to add this product?`))
+        this.productStore.add(
+          product,
+          () => {
+            alert('The product was added successfully');
+            this.router.navigate(['products']);
+          },
+          () => alert('Something went wrong!')
+        );
     }
-
-    this.router.navigate(['products'])
-  }
-
-  handleRequestSuccess() {
   }
 }

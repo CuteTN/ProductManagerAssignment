@@ -4,7 +4,6 @@ import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { Product } from 'src/app/core/models';
 import { ProductsStoreService } from 'src/app/core/services/store';
-import { MyDialogComponent, MyDialogData } from '../..';
 
 @Component({
   selector: 'products-page',
