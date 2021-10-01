@@ -52,8 +52,8 @@ export class StateStoreService<TItem> {
     );
   }
 
-  getAll() {
-    if (!this._isLoaded) this.fetchAll();
+  getAll(onSuccess?: SuccessHandler, onError?: ErrorHandler) {
+    if (!this._isLoaded) this.fetchAll(onSuccess, onError);
     return this._value;
   }
 

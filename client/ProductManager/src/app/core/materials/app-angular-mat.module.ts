@@ -13,6 +13,9 @@ import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatDialogModule } from '@angular/material/dialog';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatPaginatorModule } from '@angular/material/paginator';
+import { MatSortModule } from '@angular/material/sort';
 
 const MODULES_LIST = [
   MatTableModule,
@@ -29,6 +32,9 @@ const MODULES_LIST = [
   MatChipsModule,
   MatDividerModule,
   MatDialogModule,
+  MatTooltipModule,
+  MatPaginatorModule,
+  MatSortModule,
 ];
 
 @NgModule({

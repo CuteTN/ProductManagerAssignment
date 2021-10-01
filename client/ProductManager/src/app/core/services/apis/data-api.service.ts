@@ -9,7 +9,7 @@ import { DataQueryError, DataQueryErrorTypes } from '../../errors';
   providedIn: 'root',
 })
 export class DataApiService {
-  constructor(@Inject(String) private url: string, private http: HttpClient) {}
+  constructor(@Inject(String) protected url: string, protected http: HttpClient) {}
 
   getAll = () => this.http.get(this.url).pipe(catchError(this.handleError));
 

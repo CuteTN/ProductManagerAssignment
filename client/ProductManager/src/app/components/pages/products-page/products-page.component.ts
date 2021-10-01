@@ -1,8 +1,14 @@
 import { Component, OnInit } from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
+import { PageEvent } from '@angular/material/paginator';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
+import { catchError, map } from 'rxjs/operators';
 import { Product } from 'src/app/core/models';
+import {
+  ProductApiService,
+  ProductFilterParams,
+  ProductSortRule,
+} from 'src/app/core/services';
 import { ProductsStoreService } from 'src/app/core/services/store';
 
 @Component({
@@ -12,16 +18,24 @@ import { ProductsStoreService } from 'src/app/core/services/store';
 })
 export class ProductsPageComponent implements OnInit {
   products$: Observable<Product[]>;
-  get isProductsLoaded() {
-    return this.productsStore.isLoaded;
-  }
+
+  state: 'Loaded' | 'Loading' | 'Error' = 'Loading';
+
+  INITIAL_PAGE: number = 0;
+  INITIAL_LIMIT: number = 5;
+  productsCount$?: Observable<number>;
+  filterParams: ProductFilterParams = {
+    limit: this.INITIAL_LIMIT,
+    page: this.INITIAL_PAGE,
+  };
 
   constructor(
-    private dialog: MatDialog,
     private productsStore: ProductsStoreService,
+    private apiService: ProductApiService,
     private router: Router
   ) {
-    this.products$ = productsStore.getAll();
+    this.productsCount$ = apiService.getCount() as Observable<number>;
+    this.products$ = this.fetchRequestedProducts() as Observable<Product[]>;
   }
 
   ngOnInit(): void {}
@@ -32,6 +46,53 @@ export class ProductsPageComponent implements OnInit {
 
   handleAddProductClick = () => {
     this.router.navigate(['product/editor']);
+  };
+
+  /** @deprecated We no longer follow the fetch-all-products-at-once approach. */
+  private fetchAllProducts = () => {
+    // return this.productsStore.getAll(undefined, () => (this.isError = true));
+  };
+
+  private patchFilterParams(toPatchParams?: ProductFilterParams) {
+    if (!toPatchParams) return;
+    this.filterParams = { ...this.filterParams, ...toPatchParams };
+  }
+
+  private fetchRequestedProducts = () => {
+    this.state = 'Loading';
+    return (
+      this.apiService.getSome(this.filterParams) as Observable<Product[]>
+    ).pipe(
+      map((res) => {
+        this.state = "Loaded";
+        return res;
+      }),
+      catchError(() => (this.state = 'Error'))
+    ) as Observable<Product[]>;
+  };
+
+  handlePageChange(pageEvent: PageEvent) {
+    this.patchFilterParams({
+      page: pageEvent.pageIndex,
+      limit: pageEvent.pageSize,
+    });
+    this.products$ = this.fetchRequestedProducts() as Observable<Product[]>;
+  }
+
+  handleSortChange(sortRules: ProductSortRule[]) {
+    this.patchFilterParams({
+      sortRules,
+    });
+    this.products$ = this.fetchRequestedProducts() as Observable<Product[]>;
+  }
+
+  refreshData = () => {
+    this.productsCount$ = this.apiService.getCount() as Observable<number>;
+    this.products$ = this.fetchRequestedProducts();
+  }
+
+  handleRefreshClick = () => {
+    this.refreshData();
   };
 
   handleEditProductClick = (product: Product) => {
@@ -45,7 +106,10 @@ export class ProductsPageComponent implements OnInit {
       )
         this.productsStore.delete(
           product.id,
-          () => alert('The product was removed successfully'),
+          () => {
+            alert('The product was removed successfully');
+            this.refreshData();
+          },
           () => alert('Something went wrong!')
         );
   };

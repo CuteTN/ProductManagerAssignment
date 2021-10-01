@@ -4,21 +4,47 @@
 <button class="btn btn-success m-1" (click)="handleAddProductClick()">
   New product
 </button>
+<button class="btn btn-warning m-1" (click)="handleRefreshClick()">
+  Refresh data
+</button>
 
-<div *ngIf="isProductsLoaded; then productsTable; else loading"></div>
+<div class="mx-5 my-3" [hidden]="state === 'Error'">
+  <div class="mat-elevation-z8">
+    <div class="products-loading-shade" *ngIf="state === 'Loading'">
+      <mat-spinner mode="indeterminate" color="accent"></mat-spinner>
+    </div>
 
-<ng-template #productsTable>
-  <div class="mx-5 my-3">
     <products-table
       [products]="products$ | async"
+      [min-rows]="filterParams?.limit ?? INITIAL_LIMIT"
       (on-edit-product)="handleEditProductClick($event)"
       (on-remove-product)="handleRemoveProductClick($event)"
+      (on-sort-change)="handleSortChange($event)"
     ></products-table>
-  </div>
-</ng-template>
 
-<ng-template #loading>
+    <mat-paginator
+      [length]="(productsCount$ | async) ?? 0"
+      [pageSize]="filterParams?.limit ?? INITIAL_LIMIT"
+      [pageIndex]="filterParams?.page ?? INITIAL_PAGE"
+      [pageSizeOptions]="[5, 10]"
+      (page)="handlePageChange($event)"
+    ></mat-paginator>
+  </div>
+</div>
+
+<ng-template #fetchLoading>
   <div class="d-flex justify-content-center">
     <mat-spinner mode="indeterminate" color="accent"></mat-spinner>
   </div>
 </ng-template>
+
+<div class="container" [hidden]="state !== 'Error'">
+  <div class="d-flex row justify-content-center">
+    <h2 class="text-center">Hey, it looks like something went wrong 🥺</h2>
+  </div>
+  <div class="d-flex row justify-content-center">
+    <button mat-fab (click)="handleRefreshClick()">
+      <mat-icon>refresh</mat-icon>
+    </button>
+  </div>
+</div>

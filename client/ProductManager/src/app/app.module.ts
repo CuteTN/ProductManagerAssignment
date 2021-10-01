@@ -1,6 +1,9 @@
 import { ErrorHandler, NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-import { MatMomentDateModule, MAT_MOMENT_DATE_ADAPTER_OPTIONS } from '@angular/material-moment-adapter';
+import {
+  MatMomentDateModule,
+  MAT_MOMENT_DATE_ADAPTER_OPTIONS,
+} from '@angular/material-moment-adapter';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -28,6 +31,7 @@ import { MAT_DATE_LOCALE } from '@angular/material/core';
     Components.ProductEditorFormComponent,
     Components.SelectStarRatingComponent,
     Components.MyDialogComponent,
+    Components.ProductsFilterFormComponent,
 
     AppComponent,
   ],
