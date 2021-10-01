@@ -39,6 +39,13 @@ namespace ProductManager.Controllers
       return Ok(_mapper.Map<IEnumerable<ProductReadDto>>(result));
     }
 
+    [HttpGet("count")]
+    public ActionResult<int> GetNumberOfProducts()
+    {
+      var result = _productRepo.GetAll().Count();
+      return Ok(result);
+    }
+
     [HttpGet("{id}", Name = "GetProductById")]
     public ActionResult<ProductReadDto> GetProductById(int id)
     {

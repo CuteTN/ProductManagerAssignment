@@ -53,17 +53,17 @@ namespace ProductManager.Services
       var opts = sortRule.ToLower().Split(':', StringSplitOptions.RemoveEmptyEntries);
 
       Func<Product, IComparable> extractFieldFunc = (product) => 1;
-      bool isDesc = opts[1].ToLower().StartsWith("des");
+      bool isDesc = opts.Length >= 2 && opts[1].ToLower().StartsWith("des");
 
       switch (opts[0])
       {
         case "id": extractFieldFunc = product => product.Id; break;
-        case "name": extractFieldFunc = product => product.Name; break;
+        case "name": extractFieldFunc = product => product.Name ?? ""; break;
         case "releasedate": extractFieldFunc = product => product.ReleaseDate; break;
         case "discontinueddate": extractFieldFunc = product => product.DiscontinuedDate; break;
         case "rating": extractFieldFunc = product => product.Rating; break;
         case "price": extractFieldFunc = product => product.Price; break;
-        case "supplierid": extractFieldFunc = product => product.SupplierId; break;
+        case "suppliername": extractFieldFunc = product => product.Supplier?.Name ?? ""; break;
       }
 
       return (product1, product2) =>
