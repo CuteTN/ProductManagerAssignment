@@ -32,9 +32,10 @@ namespace ProductManager.Controllers
 
 
     [HttpGet]
-    public ActionResult<IEnumerable<ProductReadDto>> GetAllProducts()
+    public ActionResult<IEnumerable<ProductReadDto>> GetAllProducts([FromQuery] ProductsFilterParams filterParams)
     {
-      var result = _productRepo.GetAll();
+      var products = _productRepo.GetAll().ToList();
+      var result = Services.ProductFilter.Filter(products, filterParams);
       return Ok(_mapper.Map<IEnumerable<ProductReadDto>>(result));
     }
 
