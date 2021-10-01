@@ -1,5 +1,6 @@
 import { ErrorHandler, NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
+import { MatMomentDateModule, MAT_MOMENT_DATE_ADAPTER_OPTIONS } from '@angular/material-moment-adapter';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -15,6 +16,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import * as Components from './components';
 import { AppStoreModule } from './core/ngrx/app-store.module';
 import * as Services from './core/services';
+import { MAT_DATE_LOCALE } from '@angular/material/core';
 
 @NgModule({
   declarations: [
@@ -38,6 +40,7 @@ import * as Services from './core/services';
     AppStoreModule,
     AppRouterModule,
     AppAngularMaterialModule,
+    MatMomentDateModule,
   ],
   providers: [
     Services.StateStoreService,
@@ -49,6 +52,8 @@ import * as Services from './core/services';
     Services.SupplierApiService,
 
     { provide: ErrorHandler, useClass: AppErrorHandler },
+    { provide: MAT_DATE_LOCALE, useValue: 'en-GB' },
+    { provide: MAT_MOMENT_DATE_ADAPTER_OPTIONS, useValue: { useUtc: true } },
     MatDatepickerModule,
   ],
   bootstrap: [AppComponent],
