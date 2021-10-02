@@ -52,22 +52,22 @@ namespace ProductManager.Services
     {
       var opts = sortRule.ToLower().Split(':', StringSplitOptions.RemoveEmptyEntries);
 
-      Func<Product, IComparable> extractFieldFunc = (product) => 1;
+      Func<Product, IComparable> selector = (product) => 1;
       bool isDesc = opts.Length >= 2 && opts[1].ToLower().StartsWith("des");
 
       switch (opts[0])
       {
-        case "id": extractFieldFunc = product => product.Id; break;
-        case "name": extractFieldFunc = product => product.Name ?? ""; break;
-        case "releasedate": extractFieldFunc = product => product.ReleaseDate; break;
-        case "discontinueddate": extractFieldFunc = product => product.DiscontinuedDate; break;
-        case "rating": extractFieldFunc = product => product.Rating; break;
-        case "price": extractFieldFunc = product => product.Price; break;
-        case "suppliername": extractFieldFunc = product => product.Supplier?.Name ?? ""; break;
+        case "id": selector = product => product.Id; break;
+        case "name": selector = product => product.Name ?? ""; break;
+        case "releasedate": selector = product => product.ReleaseDate; break;
+        case "discontinueddate": selector = product => product.DiscontinuedDate; break;
+        case "rating": selector = product => product.Rating; break;
+        case "price": selector = product => product.Price; break;
+        case "suppliername": selector = product => product.Supplier?.Name ?? ""; break;
       }
 
       return (product1, product2) =>
-        extractFieldFunc(product1).CompareTo(extractFieldFunc(product2)) * (isDesc ? -1 : 1);
+        selector(product1).CompareTo(selector(product2)) * (isDesc ? -1 : 1);
     }
 
     private static Comparison<Product> GetCompareFunc(List<string> sortRules)
