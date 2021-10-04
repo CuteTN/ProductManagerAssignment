@@ -65,24 +65,26 @@
   <ng-container matColumnDef="actions">
     <th mat-header-cell *matHeaderCellDef>...</th>
     <td mat-cell *matCellDef="let product">
-      <button
-        mat-mini-fab
-        color="primary"
-        matTooltip="Edit this product"
-        [hidden]="!product.id"
-        (click)="handleEditProductClick(product)"
-      >
-        <mat-icon>edit</mat-icon>
-      </button>
-      <button
-        mat-mini-fab
-        color="warn"
-        matTooltip="Remove this product"
-        [hidden]="!product.id"
-        (click)="handleRemoveProductClick(product)"
-      >
-        <mat-icon>delete</mat-icon>
-      </button>
+      <div class="container d-flex action-buttons">
+        <button
+          mat-mini-fab
+          color="primary"
+          matTooltip="Edit this product"
+          [hidden]="!product.id"
+          (click)="handleEditProductClick(product)"
+        >
+          <mat-icon>edit</mat-icon>
+        </button>
+        <button
+          mat-mini-fab
+          color="warn"
+          matTooltip="Remove this product"
+          [hidden]="!product.id"
+          (click)="handleRemoveProductClick(product)"
+        >
+          <mat-icon>delete</mat-icon>
+        </button>
+      </div>
     </td>
   </ng-container>
 

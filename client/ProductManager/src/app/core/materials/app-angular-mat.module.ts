@@ -16,6 +16,7 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatSortModule } from '@angular/material/sort';
+import { MatExpansionModule } from '@angular/material/expansion';
 
 const MODULES_LIST = [
   MatTableModule,
@@ -35,6 +36,7 @@ const MODULES_LIST = [
   MatTooltipModule,
   MatPaginatorModule,
   MatSortModule,
+  MatExpansionModule,
 ];
 
 @NgModule({

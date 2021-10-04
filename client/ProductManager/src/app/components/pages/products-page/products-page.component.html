@@ -8,12 +8,28 @@
   Refresh data
 </button>
 
+<div class="mx-5 my-3">
+  <div class="d-flex row p-0 justify-content-center">
+    <mat-accordion>
+      <mat-expansion-panel class="mat-elevation-z3">
+        <mat-expansion-panel-header>
+          <mat-panel-title>
+            <mat-icon>search</mat-icon> Search and filter...
+          </mat-panel-title>
+        </mat-expansion-panel-header>
+        <div class="d-flex row">
+          <products-filter-form (on-apply)="handleSearchFilterSubmit($event)"> </products-filter-form>
+        </div>
+      </mat-expansion-panel>
+    </mat-accordion>
+  </div>
+</div>
+
 <div class="mx-5 my-3" [hidden]="state === 'Error'">
-  <div class="mat-elevation-z8">
+  <div class="mat-elevation-z8 div-table">
     <div class="products-loading-shade" *ngIf="state === 'Loading'">
       <mat-spinner mode="indeterminate" color="accent"></mat-spinner>
     </div>
-
     <products-table
       [products]="products$ | async"
       [min-rows]="filterParams?.limit ?? INITIAL_LIMIT"

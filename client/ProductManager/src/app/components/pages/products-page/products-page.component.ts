@@ -34,7 +34,9 @@ export class ProductsPageComponent implements OnInit {
     private apiService: ProductApiService,
     private router: Router
   ) {
-    this.productsCount$ = apiService.getCount() as Observable<number>;
+    this.productsCount$ = apiService.getCount(
+      this.filterParams
+    ) as Observable<number>;
     this.products$ = this.fetchRequestedProducts() as Observable<Product[]>;
   }
 
@@ -64,12 +66,21 @@ export class ProductsPageComponent implements OnInit {
       this.apiService.getSome(this.filterParams) as Observable<Product[]>
     ).pipe(
       map((res) => {
-        this.state = "Loaded";
+        this.state = 'Loaded';
         return res;
       }),
       catchError(() => (this.state = 'Error'))
     ) as Observable<Product[]>;
   };
+
+  handleSearchFilterSubmit(filterParams: ProductFilterParams) {
+    this.patchFilterParams(filterParams);
+    this.patchFilterParams({ page: 0 });
+    this.productsCount$ = this.apiService.getCount(
+      this.filterParams
+    ) as Observable<number>;
+    this.products$ = this.fetchRequestedProducts() as Observable<Product[]>;
+  }
 
   handlePageChange(pageEvent: PageEvent) {
     this.patchFilterParams({
@@ -87,9 +98,11 @@ export class ProductsPageComponent implements OnInit {
   }
 
   refreshData = () => {
-    this.productsCount$ = this.apiService.getCount() as Observable<number>;
+    this.productsCount$ = this.apiService.getCount(
+      this.filterParams
+    ) as Observable<number>;
     this.products$ = this.fetchRequestedProducts();
-  }
+  };
 
   handleRefreshClick = () => {
     this.refreshData();

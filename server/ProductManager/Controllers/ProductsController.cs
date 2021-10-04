@@ -40,9 +40,12 @@ namespace ProductManager.Controllers
     }
 
     [HttpGet("count")]
-    public ActionResult<int> GetNumberOfProducts()
+    public ActionResult<int> GetNumberOfProducts([FromQuery] ProductsFilterParams filterParams)
     {
-      var result = _productRepo.GetAll().Count();
+      var products = _productRepo.GetAll().ToList();
+      filterParams.Page = null;
+      filterParams.Limit = null;
+      var result = Services.ProductFilter.Filter(products, filterParams).Count();
       return Ok(result);
     }
 

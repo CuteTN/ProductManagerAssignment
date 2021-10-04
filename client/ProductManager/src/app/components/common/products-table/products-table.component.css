@@ -1,4 +1,5 @@
 table {
+  /* min-width: 1000px; */
   width: 100%;
 }
 
@@ -46,4 +47,8 @@ button {
 .mat-row:hover {
   background-color: #DDDDDD;
   /* transition-duration: 0.5s; */
+}
+
+.action-buttons {
+  flex-wrap: nowrap;
 }

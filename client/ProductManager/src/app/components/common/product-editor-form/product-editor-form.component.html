@@ -1,7 +1,9 @@
 <div class="d-flex container justify-content-center px-0">
-  <mat-card class="col-lg-6 col-md-9 col-sm-12 px-0 mx-0 product-editor-card">
+  <mat-card class="mat-elevation-z8 col-lg-6 col-md-9 col-sm-12 px-0 mx-0 product-editor-card">
     <div class="d-flex col justify-content-center mt-3 mb-4">
-      <label class="card-title"> NEW PRODUCT </label>
+      <label class="card-title">
+        {{ form.get("id")?.value ? "UPDATE PRODUCT" : "NEW PRODUCT" }}
+      </label>
     </div>
     <form
       [formGroup]="form"
@@ -123,7 +125,9 @@
           class="col"
           *ngIf="form.get('releaseDate') as releaseDateControl"
         >
-          <mat-label>Release date<strong class="required">&nbsp;*</strong></mat-label>
+          <mat-label
+            >Release date<strong class="required">&nbsp;*</strong></mat-label
+          >
           <input
             matInput
             [matDatepicker]="releaseDatePicker"
@@ -150,7 +154,11 @@
           class="col"
           *ngIf="form.get('discontinuedDate') as discontinuedDateControl"
         >
-          <mat-label>Discontinued date<strong class="required">&nbsp;*</strong></mat-label>
+          <mat-label
+            >Discontinued date<strong class="required"
+              >&nbsp;*</strong
+            ></mat-label
+          >
           <input
             matInput
             [matDatepicker]="discontinuedDatePicker"

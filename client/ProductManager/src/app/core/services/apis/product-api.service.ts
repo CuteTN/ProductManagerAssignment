@@ -4,63 +4,77 @@ import { LOCAL_SERVER_URL } from '../../../app.env';
 import { DataApiService } from './data-api.service';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class ProductApiService extends DataApiService {
-  constructor(http: HttpClient) { 
+  constructor(http: HttpClient) {
     super(`${LOCAL_SERVER_URL}/api/products`, http);
   }
 
   getSome = (filterParams: ProductFilterParams) => {
-    const cloneParams = {...filterParams}
-    let url = this.url + '?';
+    const url = this.url + '?' + convertToQueryString(filterParams);
+    return this.http.get(url);
+  };
 
-    if(cloneParams.categoryIds) {
-      cloneParams.categoryIds.forEach(categoryId => {
-        url += `categoryId=${categoryId}&`;
-      })
-    }
-    delete cloneParams.categoryIds;
-    
-    if(cloneParams.sortRules) {
-      cloneParams.sortRules.forEach(sortRule => {
-        url += `sortBy=${sortRule.field}:${sortRule.direction}&`;
-      })
-    }
-    delete cloneParams.sortRules;
-
-    Object.entries(cloneParams).forEach(([key, value]) => {
-      url += `${key}=${value}&`;
-    })
+  getCount = (filterParams?: ProductFilterParams) => {
+    let url = this.url + '/count';
+    if (filterParams) url += '?' + convertToQueryString(filterParams);
 
     return this.http.get(url);
-  }
+  };
+}
 
-  getCount = () => {
-    return this.http.get(`${this.url}/count`);
+function convertToQueryString(filterParams: ProductFilterParams): string {
+  const cloneParams = { ...filterParams };
+  let query = '';
+
+  if (cloneParams.categoryIds) {
+    cloneParams.categoryIds.forEach((categoryId) => {
+      query += `categoryId=${categoryId}&`;
+    });
   }
+  delete cloneParams.categoryIds;
+
+  if (cloneParams.sortRules) {
+    cloneParams.sortRules.forEach((sortRule) => {
+      query += `sortBy=${sortRule.field}:${sortRule.direction}&`;
+    });
+  }
+  delete cloneParams.sortRules;
+
+  Object.entries(cloneParams).forEach(([key, value]) => {
+    if (value != undefined) {
+      // NOTE: Got to use magic strings here because testing instanceof Date does not work.
+      if (key === 'minReleaseDate' || key === 'maxReleaseDate') {
+        const str = (value as Date).toISOString();
+        query += `${key}=${str}&`;
+      } else query += `${key}=${value}&`;
+    }
+  });
+
+  return query;
 }
 
 export interface ProductFilterParams {
-  minId?: number,
-  maxId?: number,
+  minId?: number;
+  maxId?: number;
   hasName?: string;
-  minReleaseDate?: Date,
-  maxReleaseDate?: Date,
-  minRating?: number,
-  maxRating?: number,
-  minPrice?: number,
-  maxPrice?: number,
-  supplierId?: number,
-  categoryIds?: number[],
+  minReleaseDate?: Date;
+  maxReleaseDate?: Date;
+  minRating?: number;
+  maxRating?: number;
+  minPrice?: number;
+  maxPrice?: number;
+  supplierId?: number;
+  categoryIds?: number[];
 
-  page?: number,
-  limit?: number,
+  page?: number;
+  limit?: number;
 
-  sortRules?: ProductSortRule[],
+  sortRules?: ProductSortRule[];
 }
 
 export interface ProductSortRule {
-  field: string,
-  direction: "asc" | "desc",
+  field: string;
+  direction: 'asc' | 'desc';
 }

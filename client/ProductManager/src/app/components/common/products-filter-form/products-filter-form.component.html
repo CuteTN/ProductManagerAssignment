@@ -1,1 +1,122 @@
-<p>products-filter-form works!</p>
+<div class="d-flex row px-0">
+  <div class="col-12 px-0 mx-0">
+    <form
+      [formGroup]="form"
+      class="d-flex row justify-content-center p-2 m-0 col-12"
+      (ngSubmit)="handleSubmitClick()"
+    >
+      <div class="row col-12">
+        <mat-form-field appearance="fill" class="col">
+          <mat-label>Name</mat-label>
+          <input
+            matInput
+            type="search"
+            placeholder="Specify the words may be contained in the product's name"
+            formControlName="hasName"
+          />
+          <mat-icon matSuffix>search</mat-icon>
+        </mat-form-field>
+      </div>
+
+      <div class="row col-12">
+        <mat-form-field appearance="fill" class="col-3">
+          <mat-label>Min ID</mat-label>
+          <input matInput type="number" formControlName="minId" />
+        </mat-form-field>
+
+        <mat-form-field appearance="fill" class="col-3">
+          <mat-label>Max ID</mat-label>
+          <input matInput type="number" formControlName="maxId" />
+        </mat-form-field>
+
+        <mat-form-field appearance="fill" class="col-3">
+          <mat-label>Min released date</mat-label>
+          <input
+            matInput
+            [matDatepicker]="minReleaseDatePicker"
+            [max]="form.get('maxReleaseDate')?.value"
+            (click)="minReleaseDatePicker.open()"
+            readonly
+            formControlName="minReleaseDate"
+          />
+          <mat-datepicker-toggle matSuffix [for]="minReleaseDatePicker">
+          </mat-datepicker-toggle>
+          <mat-icon
+            matPrefix
+            class="reset-field-button"
+            *ngIf="form.get('minReleaseDate')?.value"
+            (click)="resetValueOfControl('minReleaseDate')"
+          >
+            close
+          </mat-icon>
+          <mat-datepicker #minReleaseDatePicker> </mat-datepicker>
+        </mat-form-field>
+
+        <mat-form-field appearance="fill" class="col-3">
+          <mat-label>Max released date </mat-label>
+          <input
+            matInput
+            [matDatepicker]="maxReleaseDatePicker"
+            [min]="form.get('minReleaseDate')?.value"
+            placeholder="The product must be released before..."
+            (click)="maxReleaseDatePicker.open()"
+            readonly
+            formControlName="maxReleaseDate"
+          />
+          <mat-datepicker-toggle matSuffix [for]="maxReleaseDatePicker">
+          </mat-datepicker-toggle>
+          <mat-icon
+            matPrefix
+            class="reset-field-button"
+            *ngIf="form.get('maxReleaseDate')?.value"
+            (click)="resetValueOfControl('maxReleaseDate')"
+          >
+            close
+          </mat-icon>
+          <mat-datepicker #maxReleaseDatePicker> </mat-datepicker>
+        </mat-form-field>
+      </div>
+
+      <div class="row col-12">
+        <mat-form-field appearance="fill" class="col-3">
+          <mat-label>Min price</mat-label>
+          <input matInput type="number" formControlName="minPrice" />
+        </mat-form-field>
+
+        <mat-form-field appearance="fill" class="col-3">
+          <mat-label>Max price</mat-label>
+          <input matInput type="number" formControlName="maxPrice" />
+        </mat-form-field>
+
+        <mat-form-field appearance="fill" class="col-3">
+          <mat-label>Min rating</mat-label>
+          <input matInput type="number" formControlName="minRating" />
+        </mat-form-field>
+
+        <mat-form-field appearance="fill" class="col-3">
+          <mat-label>Max rating</mat-label>
+          <input matInput type="number" formControlName="maxRating" />
+        </mat-form-field>
+      </div>
+
+      <div class="row col-12 justify-content-end">
+        <button
+          class="col-lg-1 col-md-2 col-sm-2 mx-2"
+          mat-raised-button
+          type="reset"
+          (click)="handleResetClick()"
+        >
+          RESET
+        </button>
+        <button
+          class="col-lg-1 col-md-2 col-sm-2 mx-2"
+          mat-raised-button
+          color="primary"
+          type="submit"
+        >
+          GO
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
