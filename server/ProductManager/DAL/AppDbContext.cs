@@ -14,7 +14,7 @@ namespace ProductManager.DAL
     public DbSet<ProductDetail> ProductDetails { get; set; }
     public DbSet<Category> Categories { get; set; }
     public DbSet<Supplier> Suppliers { get; set; }
-    // public DbSet<CategoryProduct> CategoryProduct { get; set; }
+    public DbSet<RefreshToken> RefreshTokens { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     { 

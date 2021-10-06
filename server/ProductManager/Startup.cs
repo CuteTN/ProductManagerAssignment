@@ -41,6 +41,19 @@ namespace ProductManager
       // services
       //   .AddAuthentication(CertificateAuthenticationDefaults.AuthenticationScheme)
       //   .AddCertificate();
+      var tokenValidationParameters = new TokenValidationParameters()
+      {
+        ValidateIssuer = true,
+        ValidateAudience = true,
+        ValidateLifetime = true,
+        ValidAudience = Configuration["JWT:ValidAudience"],
+        ValidIssuer = Configuration["JWT:ValidIssuer"],
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["JWT:Secret"])),
+        ClockSkew = TimeSpan.Zero,
+      };
+
+      services.AddSingleton(tokenValidationParameters);
+
       services
         .AddAuthentication(options =>
           {
@@ -52,15 +65,7 @@ namespace ProductManager
           {
             options.SaveToken = true;
             options.RequireHttpsMetadata = false;
-            options.TokenValidationParameters = new TokenValidationParameters()
-            {
-              ValidateIssuer = true,
-              ValidateAudience = true,
-              ValidateLifetime = true,
-              ValidAudience = Configuration["JWT:ValidAudience"],
-              ValidIssuer = Configuration["JWT:ValidIssuer"],
-              IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["JWT:Secret"]))
-            };
+            options.TokenValidationParameters = tokenValidationParameters;
           }
         );
 
@@ -82,7 +87,7 @@ namespace ProductManager
       services
         .AddIdentity<Models.AppUser, IdentityRole>()
         .AddEntityFrameworkStores<DAL.AppDbContext>()
-        .AddDefaultTokenProviders();  
+        .AddDefaultTokenProviders();
 
       services.AddControllers()
         .AddNewtonsoftJson(s =>
