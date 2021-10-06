@@ -1,11 +1,12 @@
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using ProductManager.Models;
 
 namespace ProductManager.DAL
 {
-  public class AppContext : DbContext
+  public class AppDbContext : IdentityDbContext<AppUser>
   {
-    public AppContext(DbContextOptions<AppContext> opt) : base(opt)
+    public AppDbContext(DbContextOptions<AppDbContext> opt) : base(opt)
     {
     }
 
@@ -16,6 +17,8 @@ namespace ProductManager.DAL
     // public DbSet<CategoryProduct> CategoryProduct { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
-    { }
+    { 
+      base.OnModelCreating(modelBuilder);
+    }
   }
 }

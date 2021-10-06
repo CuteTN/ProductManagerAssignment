@@ -31,6 +31,9 @@ namespace ProductManager.Profiles
 
       CreateMap<Supplier, SupplierReadDto>();
       CreateMap<Supplier, SupplierMinReadDto>();
+
+
+      CreateMap<RegisterRequestDto, AppUser>();
     }
   }
 }

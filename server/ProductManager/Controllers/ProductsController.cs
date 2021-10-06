@@ -1,7 +1,7 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using ProductManager.DAL;
@@ -60,6 +60,7 @@ namespace ProductManager.Controllers
       return Ok(_mapper.Map<ProductReadDto>(result));
     }
 
+    [Authorize(AuthenticationSchemes = "Bearer")]
     [HttpPost]
     public ActionResult<ProductReadDto> CreateProduct(ProductCreateDto productCreateDto)
     {
@@ -80,6 +81,8 @@ namespace ProductManager.Controllers
       return CreatedAtRoute(nameof(GetProductById), new { Id = productReadDto.Id }, productReadDto);
     }
 
+
+    [Authorize(AuthenticationSchemes = "Bearer")]
     [HttpPut("{id}")]
     public ActionResult<ProductReadDto> UpdateProduct(int id, ProductUpdateDto productUpdateDto)
     {
@@ -104,6 +107,7 @@ namespace ProductManager.Controllers
       return Ok(_mapper.Map<ProductReadDto>(newProduct));
     }
 
+    [Authorize(AuthenticationSchemes = "Bearer")]
     [HttpPatch("{id}")]
     public ActionResult<ProductReadDto> PatchProduct(int id, JsonPatchDocument<ProductUpdateDto> patchDoc)
     {
@@ -126,6 +130,7 @@ namespace ProductManager.Controllers
       return Ok(_mapper.Map<ProductReadDto>(newProduct));
     }
 
+    [Authorize(AuthenticationSchemes = "Bearer")]
     [HttpDelete("{id}")]
     public ActionResult<ProductReadDto> DeleteProduct(int id)
     {
@@ -139,6 +144,7 @@ namespace ProductManager.Controllers
       return Ok(_mapper.Map<ProductReadDto>(oldProduct));
     }
 
+    [Authorize(AuthenticationSchemes = "Bearer")]
     [HttpPut("{id}/categories")]
     public ActionResult<ProductReadDto> SetProductCategories(int id, IEnumerable<int> categoryIds)
     {
@@ -162,6 +168,7 @@ namespace ProductManager.Controllers
       return Ok(_mapper.Map<ProductReadDto>(oldProduct));
     }
 
+    [Authorize(AuthenticationSchemes = "Bearer")]
     [HttpPut("{id}/details")]
     public ActionResult<ProductReadDto> SetProductDetails(int id, ProductDetailUpdateDto productDetailUpdateDto)
     {

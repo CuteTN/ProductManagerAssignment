@@ -17,6 +17,10 @@ using System.Globalization;
 using Microsoft.AspNetCore.Localization;
 using Newtonsoft.Json.Serialization;
 using Microsoft.AspNetCore.Authentication.Certificate;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 namespace ProductManager
 {
@@ -34,9 +38,31 @@ namespace ProductManager
     // This method gets called by the runtime. Use this method to add services to the container.
     public void ConfigureServices(IServiceCollection services)
     {
+      // services
+      //   .AddAuthentication(CertificateAuthenticationDefaults.AuthenticationScheme)
+      //   .AddCertificate();
       services
-        .AddAuthentication(CertificateAuthenticationDefaults.AuthenticationScheme)
-        .AddCertificate();
+        .AddAuthentication(options =>
+          {
+            options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+            options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+          })
+        .AddJwtBearer(options =>
+          {
+            options.SaveToken = true;
+            options.RequireHttpsMetadata = false;
+            options.TokenValidationParameters = new TokenValidationParameters()
+            {
+              ValidateIssuer = true,
+              ValidateAudience = true,
+              ValidateLifetime = true,
+              ValidAudience = Configuration["JWT:ValidAudience"],
+              ValidIssuer = Configuration["JWT:ValidIssuer"],
+              IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["JWT:Secret"]))
+            };
+          }
+        );
 
       services.AddCors(opt =>
         opt.AddPolicy(angularLocalhostOrigin, builder =>
@@ -47,11 +73,16 @@ namespace ProductManager
         )
       );
 
-      services.AddDbContext<DAL.AppContext>(opt =>
+      services.AddDbContext<DAL.AppDbContext>(opt =>
         opt
           .UseLazyLoadingProxies()
           .UseSqlServer(Configuration.GetConnectionString("ProductConnection"))
       );
+
+      services
+        .AddIdentity<Models.AppUser, IdentityRole>()
+        .AddEntityFrameworkStores<DAL.AppDbContext>()
+        .AddDefaultTokenProviders();  
 
       services.AddControllers()
         .AddNewtonsoftJson(s =>
@@ -104,6 +135,7 @@ namespace ProductManager
 
       app.UseCors(angularLocalhostOrigin);
 
+      app.UseAuthentication();
       app.UseAuthorization();
 
       app.UseEndpoints(endpoints =>

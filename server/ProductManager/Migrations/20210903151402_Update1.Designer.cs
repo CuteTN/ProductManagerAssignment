@@ -9,7 +9,7 @@ using ProductManager.DAL;
 
 namespace ProductManager.Migrations
 {
-  [DbContext(typeof(DAL.AppContext))]
+  [DbContext(typeof(DAL.AppDbContext))]
   [Migration("20210903151402_Update1")]
   partial class Update1
   {
