@@ -10,15 +10,21 @@ export class AuthenticationApiService {
 
   constructor(protected http: HttpClient) {}
 
-  logIn = (userName: string, password: string) => {
-    return this.http.post(`${this.url}/login`, { userName, password });
+  logIn = (username: string, password: string) => {
+    return this.http.post(`${this.url}/login`, { username, password });
   };
 
   refreshToken = (refreshToken: string) => {
     return this.http.post(`${this.url}/refresh-token`, { refreshToken });
   };
 
-  register = (userName: string, password: string) => {
-    return this.http.post(`${this.url}/register`, { userName, password });
+  register = (username: string, password: string) => {
+    return this.http.post(`${this.url}/register`, { username, password });
+  };
+
+  invalidate = (refreshToken: string) => {
+    return this.http.delete(`${this.url}/invalidate`, {
+      body: { refreshToken },
+    });
   };
 }

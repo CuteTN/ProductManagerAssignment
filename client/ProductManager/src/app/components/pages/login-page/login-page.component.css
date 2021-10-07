@@ -1,0 +1,10 @@
+.login-card {
+  border-radius: 30px;
+  background-color: whitesmoke;
+}
+
+.card-title {
+  font-family: "Franklin Gothic Medium", "Arial Narrow", Arial, sans-serif;
+  white-space: nowrap;
+  font-size: 40px;
+}

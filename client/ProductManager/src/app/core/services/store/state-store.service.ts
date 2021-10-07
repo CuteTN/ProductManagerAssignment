@@ -1,6 +1,6 @@
 import { Inject, Injectable } from '@angular/core';
 import { Action, Store } from '@ngrx/store';
-import { Observable } from 'rxjs';
+import { Observable, throwError } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 import { AppState } from 'src/app/app.state';
 import { DataApiService } from '../apis/data-api.service';
@@ -46,9 +46,6 @@ export class StateStoreService<TItem> {
           return response;
         }
       ),
-      catchError((error) => {
-        throw error;
-      })
     );
   }
 
@@ -80,10 +77,7 @@ export class StateStoreService<TItem> {
           if (action) this.store.dispatch(action);
           return response; 
         }
-      ),
-      catchError((error) => {
-        throw error;
-      })
+      )
     );
   }
 
@@ -94,9 +88,7 @@ export class StateStoreService<TItem> {
         if (action) this.store.dispatch(action);
         return response;
       }),
-      catchError((error) => {
-        throw error;
-      })
+      catchError(error => throwError(error))
     );
   }
 
@@ -106,9 +98,6 @@ export class StateStoreService<TItem> {
         const action = this.createDeleteAction?.(id, opt);
         if (action) this.store.dispatch(action);
         return response;
-      }),
-      catchError((error) => {
-        throw error;
       })
     );
   }

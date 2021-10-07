@@ -8,7 +8,7 @@ import {
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { AppErrorHandler } from './core/errors';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { AppRouterModule } from './core/routers/app-router.module';
@@ -20,6 +20,8 @@ import * as Components from './components';
 import { AppStoreModule } from './core/ngrx/app-store.module';
 import * as Services from './core/services';
 import { MAT_DATE_LOCALE } from '@angular/material/core';
+import { JwtModule } from '@auth0/angular-jwt';
+import { RefreshTokenAndRetryInterceptor } from './core/interceptors/refresh-token-and-retry.interceptor';
 
 @NgModule({
   declarations: [
@@ -32,6 +34,7 @@ import { MAT_DATE_LOCALE } from '@angular/material/core';
     Components.SelectStarRatingComponent,
     Components.MyDialogComponent,
     Components.ProductsFilterFormComponent,
+    Components.LoginPageComponent,
 
     AppComponent,
   ],
@@ -45,9 +48,14 @@ import { MAT_DATE_LOCALE } from '@angular/material/core';
     AppRouterModule,
     AppAngularMaterialModule,
     MatMomentDateModule,
+    JwtModule.forRoot({
+      config: {
+        // tokenGetter:  () => localStorage.getItem('access_token')
+      }
+    })
   ],
   providers: [
-    Services.StateStoreService,
+    // Services.StateStoreService,
     Services.CategoriesStoreService,
     Services.CategoryApiService,
     Services.ProductsStoreService,
@@ -58,6 +66,7 @@ import { MAT_DATE_LOCALE } from '@angular/material/core';
     { provide: ErrorHandler, useClass: AppErrorHandler },
     { provide: MAT_DATE_LOCALE, useValue: 'en-GB' },
     { provide: MAT_MOMENT_DATE_ADAPTER_OPTIONS, useValue: { useUtc: true } },
+    { provide: HTTP_INTERCEPTORS, useClass: RefreshTokenAndRetryInterceptor, multi: true },
     MatDatepickerModule,
   ],
   bootstrap: [AppComponent],

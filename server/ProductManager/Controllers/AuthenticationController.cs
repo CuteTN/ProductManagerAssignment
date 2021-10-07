@@ -156,9 +156,17 @@ namespace ProductManager.Controllers
       return existedToken;
     }
 
-    private void InvalidateRefreshToken(RefreshToken token)
+    [HttpDelete("invalidate")]
+    public IActionResult InvalidateRefreshToken(InvalidateRefreshTokenRequestDto invalidateRefreshTokenRequestDto)
     {
-      _refreshTokenRepo.DeleteById(token.Id);
+      var token = _refreshTokenRepo.GetAll().FirstOrDefault(token => token.Token == invalidateRefreshTokenRequestDto.refreshToken);
+      InvalidateRefreshToken(token);
+      return Ok();
+    }
+
+    public void InvalidateRefreshToken(RefreshToken token)
+    {
+      _refreshTokenRepo.DeleteById(token?.Id);
       _unitOfWork.SaveChanges();
     }
   }

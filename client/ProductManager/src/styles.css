@@ -15,6 +15,10 @@ body {
   background-color: pink;
 }
 
+.required {
+  color: #f44336;
+}
+
 /* @media screen and (max-width: 767px) and (orientation: landscape) {
   html {
     transform: rotate(-90deg);

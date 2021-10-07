@@ -10,12 +10,13 @@ namespace ProductManager.Services
 {
   static public class TokenFactory
   {
-    static public JwtSecurityToken Generate(string name, IList<string> userRoles, DateTime tokenLifeTime, string tokenType, IConfiguration configuration)
+    static public JwtSecurityToken Generate(string userName, IList<string> userRoles, DateTime tokenLifeTime, string tokenType, IConfiguration configuration)
     {
       var authClaims = new List<Claim>
         {
           new Claim("type", tokenType),
-          new Claim(ClaimTypes.Name, name),
+          new Claim("username", userName),
+          new Claim(ClaimTypes.Name, userName),
           new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
         };
 

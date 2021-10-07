@@ -7,7 +7,7 @@ const REFRESH_TOKEN_KEY = "refresh-token";
   providedIn: 'root'
 })
 export class LocalstorageTokensProviderService {
-  set accessToken(token: string|null) {
+  set accessToken(token: string|null|undefined) {
     if(token != null)
       localStorage.setItem(ACCESS_TOKEN_KEY, token);
     else
@@ -18,7 +18,7 @@ export class LocalstorageTokensProviderService {
     return localStorage.getItem(ACCESS_TOKEN_KEY);
   }
 
-  set refreshToken(token: string|null) {
+  set refreshToken(token: string|null|undefined) {
     if(token != null)
       localStorage.setItem(REFRESH_TOKEN_KEY, token);
     else

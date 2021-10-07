@@ -11,7 +11,7 @@ using ProductManager.Models;
 namespace ProductManager.Controllers
 {
   // "[controller] will be replaced by the prefix of the class, ie "Products"
-  // [Authorize(AuthenticationSchemes = "Bearer", Policy = "AccessToken")]
+  [Authorize(AuthenticationSchemes = "Bearer", Policy = "AccessToken")]
   [Route("api/[controller]")]
   [ApiController]
   public class ProductsController : ControllerBase
