@@ -11,6 +11,7 @@ using ProductManager.Models;
 namespace ProductManager.Controllers
 {
   // "[controller] will be replaced by the prefix of the class, ie "Products"
+  [Authorize(AuthenticationSchemes = "Bearer", Policy = "AccessToken")]
   [Route("api/[controller]")]
   [ApiController]
   public class ProductsController : ControllerBase
@@ -32,6 +33,7 @@ namespace ProductManager.Controllers
 
 
     [HttpGet]
+    [AllowAnonymous]
     public ActionResult<IEnumerable<ProductReadDto>> GetAllProducts([FromQuery] ProductsFilterParams filterParams)
     {
       var products = _productRepo.GetAll().ToList();
@@ -40,6 +42,7 @@ namespace ProductManager.Controllers
     }
 
     [HttpGet("count")]
+    [AllowAnonymous]
     public ActionResult<int> GetNumberOfProducts([FromQuery] ProductsFilterParams filterParams)
     {
       var products = _productRepo.GetAll().ToList();
@@ -50,6 +53,7 @@ namespace ProductManager.Controllers
     }
 
     [HttpGet("{id}", Name = "GetProductById")]
+    [AllowAnonymous]
     public ActionResult<ProductReadDto> GetProductById(int id)
     {
       var result = _productRepo.GetById(id);
@@ -60,7 +64,6 @@ namespace ProductManager.Controllers
       return Ok(_mapper.Map<ProductReadDto>(result));
     }
 
-    [Authorize(AuthenticationSchemes = "Bearer")]
     [HttpPost]
     public ActionResult<ProductReadDto> CreateProduct(ProductCreateDto productCreateDto)
     {
@@ -82,7 +85,6 @@ namespace ProductManager.Controllers
     }
 
 
-    [Authorize(AuthenticationSchemes = "Bearer")]
     [HttpPut("{id}")]
     public ActionResult<ProductReadDto> UpdateProduct(int id, ProductUpdateDto productUpdateDto)
     {
@@ -107,7 +109,6 @@ namespace ProductManager.Controllers
       return Ok(_mapper.Map<ProductReadDto>(newProduct));
     }
 
-    [Authorize(AuthenticationSchemes = "Bearer")]
     [HttpPatch("{id}")]
     public ActionResult<ProductReadDto> PatchProduct(int id, JsonPatchDocument<ProductUpdateDto> patchDoc)
     {
@@ -130,7 +131,6 @@ namespace ProductManager.Controllers
       return Ok(_mapper.Map<ProductReadDto>(newProduct));
     }
 
-    [Authorize(AuthenticationSchemes = "Bearer")]
     [HttpDelete("{id}")]
     public ActionResult<ProductReadDto> DeleteProduct(int id)
     {
@@ -144,7 +144,6 @@ namespace ProductManager.Controllers
       return Ok(_mapper.Map<ProductReadDto>(oldProduct));
     }
 
-    [Authorize(AuthenticationSchemes = "Bearer")]
     [HttpPut("{id}/categories")]
     public ActionResult<ProductReadDto> SetProductCategories(int id, IEnumerable<int> categoryIds)
     {
@@ -168,7 +167,6 @@ namespace ProductManager.Controllers
       return Ok(_mapper.Map<ProductReadDto>(oldProduct));
     }
 
-    [Authorize(AuthenticationSchemes = "Bearer")]
     [HttpPut("{id}/details")]
     public ActionResult<ProductReadDto> SetProductDetails(int id, ProductDetailUpdateDto productDetailUpdateDto)
     {

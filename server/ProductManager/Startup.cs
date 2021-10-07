@@ -69,6 +69,15 @@ namespace ProductManager
           }
         );
 
+      // NOTE: this is to prevent authorization from accepting refresh tokens
+      services.AddAuthorization(options =>
+      {
+        options.AddPolicy("AccessToken", policy => 
+        {
+          policy.RequireClaim("type", "access");
+        });
+      });
+
       services.AddCors(opt =>
         opt.AddPolicy(angularLocalhostOrigin, builder =>
           builder.WithOrigins("http://localhost:4200")

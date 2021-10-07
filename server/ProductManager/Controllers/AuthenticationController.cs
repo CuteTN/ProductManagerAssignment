@@ -105,12 +105,14 @@ namespace ProductManager.Controllers
         user.UserName,
         userRoles,
         new DateTime().AddMinutes(1),
+        "access",
         _configuration
       );
       var refreshToken = TokenFactory.Generate(
         user.UserName,
         userRoles,
         new DateTime().AddDays(1),
+        "refresh",
         _configuration
       );
 
@@ -143,10 +145,7 @@ namespace ProductManager.Controllers
       var jwtTokenHandler = new JwtSecurityTokenHandler();
 
       // First, just check if this token is valid
-      try
-      {
-        jwtTokenHandler.ValidateToken(token, _tokenValidationParameters, out var validatedToken);
-      }
+      try { jwtTokenHandler.ValidateToken(token, _tokenValidationParameters, out var validatedToken); }
       catch { return null; }
 
       // Check if the refresh token is still available
