@@ -149,7 +149,7 @@ namespace ProductManager.Controllers
       catch { return null; }
 
       // Check if the refresh token is still available
-      var existedToken = _refreshTokenRepo.GetAll().FirstOrDefault(rt => rt.Token == token && !rt.Invalidated);
+      RefreshToken existedToken = _refreshTokenRepo.GetAll().FirstOrDefault(rt => rt.Token == token && !rt.Invalidated);
       if (existedToken == null)
         return null;
 
@@ -166,8 +166,11 @@ namespace ProductManager.Controllers
 
     public void InvalidateRefreshToken(RefreshToken token)
     {
-      _refreshTokenRepo.DeleteById(token?.Id);
-      _unitOfWork.SaveChanges();
+      if (token != null)
+      {
+        _refreshTokenRepo.DeleteById(token.Id);
+        _unitOfWork.SaveChanges();
+      }
     }
   }
 }
