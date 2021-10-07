@@ -1,6 +1,7 @@
 import { Inject, Injectable } from '@angular/core';
 import { Action, Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
+import { catchError, map } from 'rxjs/operators';
 import { AppState } from 'src/app/app.state';
 import { DataApiService } from '../apis/data-api.service';
 
@@ -35,25 +36,29 @@ export class StateStoreService<TItem> {
   protected createUpdateAction?: (item: TItem, ...opt: any) => Action;
   protected createDeleteAction?: (id: number, ...opt: any) => Action;
 
-  fetchAll(onSuccess?: SuccessHandler, onError?: ErrorHandler) {
-    const sub = this.apiService?.getAll().subscribe(
-      (response) => {
-        const action = this.createSetAllAction?.(response as TItem[]);
-        if (action) this.store.dispatch(action);
-        this._isLoaded = true;
-
-        onSuccess?.(response);
-        sub?.unsubscribe();
-      },
-      (error) => {
-        if (onError) onError(error);
-        else throw error;
-      }
+  fetchAll() {
+    return this.apiService?.getAll().pipe(
+      map(
+        (response) => {
+          const action = this.createSetAllAction?.(response as TItem[]);
+          if (action) this.store.dispatch(action);
+          this._isLoaded = true;
+          return response;
+        }
+      ),
+      catchError((error) => {
+        throw error;
+      })
     );
   }
 
   getAll(onSuccess?: SuccessHandler, onError?: ErrorHandler) {
-    if (!this._isLoaded) this.fetchAll(onSuccess, onError);
+    if (!this._isLoaded) 
+      this.fetchAll()?.subscribe(
+        (response) => onSuccess?.(response),
+        (error) => onError?.(error) 
+      );
+
     return this._value;
   }
 
@@ -66,72 +71,46 @@ export class StateStoreService<TItem> {
 
   add(
     item: TItem,
-    onSuccess?: SuccessHandler,
-    onError?: ErrorHandler,
     ...opt: any
   ) {
-    const sub = this.apiService?.create(item).subscribe(
-      (response) => {
-        const action = this.createAddAction?.(response as TItem, opt);
-        if (action) this.store.dispatch(action);
-
-        onSuccess?.(response);
-        sub?.unsubscribe();
-      },
-      (error) => {
-        if (onError) onError(error);
-        else throw error;
-      }
+    return this.apiService?.create(item).pipe(
+      map(
+        (response) => {
+          const action = this.createAddAction?.(response as TItem, opt);
+          if (action) this.store.dispatch(action);
+          return response; 
+        }
+      ),
+      catchError((error) => {
+        throw error;
+      })
     );
-
-    return sub;
   }
 
-  update(
-    id: number,
-    item: TItem,
-    onSuccess?: SuccessHandler,
-    onError?: ErrorHandler,
-    ...opt: any
-  ) {
-    const sub = this.apiService?.update(id, item).subscribe(
-      (response) => {
+  update(id: number, item: TItem, ...opt: any) {
+    return this.apiService?.update(id, item).pipe(
+      map((response) => {
         const action = this.createUpdateAction?.(response as TItem, opt);
         if (action) this.store.dispatch(action);
-
-        onSuccess?.(response);
-        sub?.unsubscribe();
-      },
-      (error) => {
-        if (onError) onError(error);
-        else throw error;
-      }
+        return response;
+      }),
+      catchError((error) => {
+        throw error;
+      })
     );
-
-    return sub;
   }
 
-  delete(
-    id: number,
-    onSuccess?: SuccessHandler,
-    onError?: ErrorHandler,
-    ...opt: any
-  ) {
-    const sub = this.apiService?.delete(id).subscribe(
-      (response) => {
+  delete(id: number, ...opt: any) {
+    return this.apiService?.delete(id).pipe(
+      map((response) => {
         const action = this.createDeleteAction?.(id, opt);
         if (action) this.store.dispatch(action);
-
-        onSuccess?.(response);
-        sub?.unsubscribe();
-      },
-      (error) => {
-        if (onError) onError(error);
-        else throw error;
-      }
+        return response;
+      }),
+      catchError((error) => {
+        throw error;
+      })
     );
-
-    return sub;
   }
 }
 

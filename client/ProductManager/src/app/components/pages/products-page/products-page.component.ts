@@ -117,8 +117,7 @@ export class ProductsPageComponent implements OnInit {
       if (
         confirm(`Are you sure to delete the product with ID = ${product.id}?`)
       )
-        this.productsStore.delete(
-          product.id,
+        this.productsStore.delete(product.id)?.subscribe(
           () => {
             alert('The product was removed successfully');
             this.refreshData();

@@ -33,9 +33,7 @@ export class ProductEditorPageComponent implements OnInit {
           `Are you sure to update the product with ID = ${this.productToEdit.id}?`
         )
       )
-        this.productStore.update(
-          this.productToEdit.id,
-          product,
+        this.productStore.update(this.productToEdit.id, product)?.subscribe(
           () => {
             alert('The product was updated successfully');
             this.router.navigate(['products']);
@@ -44,8 +42,7 @@ export class ProductEditorPageComponent implements OnInit {
         );
     } else {
       if (confirm(`Are you sure to add this product?`))
-        this.productStore.add(
-          product,
+        this.productStore.add(product)?.subscribe(
           () => {
             alert('The product was added successfully');
             this.router.navigate(['products']);
