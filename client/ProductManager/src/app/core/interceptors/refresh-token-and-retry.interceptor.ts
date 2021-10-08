@@ -16,6 +16,7 @@ import {
 import { catchError, filter, mergeMap, switchMap, take } from 'rxjs/operators';
 import { DataQueryError, DataQueryErrorTypes } from '../errors';
 import { JwtHelperService } from '@auth0/angular-jwt';
+import { CLIENT_NO_AUTH_PARAM_NAME } from '../utils/client-no-auth';
 
 @Injectable()
 export class RefreshTokenAndRetryInterceptor implements HttpInterceptor {
@@ -53,7 +54,7 @@ export class RefreshTokenAndRetryInterceptor implements HttpInterceptor {
     // })
     // );
 
-    if (httpRequest.url.indexOf('refresh-token') !== -1) {
+    if (httpRequest.params.has(CLIENT_NO_AUTH_PARAM_NAME)) {
       return next.handle(httpRequest);
     }
 

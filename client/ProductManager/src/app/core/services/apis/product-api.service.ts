@@ -1,7 +1,9 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { Observable } from 'rxjs';
 import { LocalstorageTokensProviderService } from '..';
 import { LOCAL_SERVER_URL } from '../../../app.env';
+import { CLIENT_NO_AUTH_PARAMS } from '../../utils/client-no-auth';
 import { DataApiService } from './data-api.service';
 
 @Injectable({
@@ -17,14 +19,13 @@ export class ProductApiService extends DataApiService {
 
   getSome = (filterParams: ProductFilterParams) => {
     const url = this.url + '?' + convertToQueryString(filterParams);
-    return this.http.get(url);
+    return this.http.get(url, { params: CLIENT_NO_AUTH_PARAMS });
   };
 
   getCount = (filterParams?: ProductFilterParams) => {
     let url = this.url + '/count';
     if (filterParams) url += '?' + convertToQueryString(filterParams);
-
-    return this.http.get(url);
+    return this.http.get(url, { params: CLIENT_NO_AUTH_PARAMS });
   };
 }
 
