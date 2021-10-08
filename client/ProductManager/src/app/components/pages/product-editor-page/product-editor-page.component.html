@@ -8,3 +8,7 @@
     (on-submit)="handleSubmitProduct($event)"
   ></product-editor-form>
 </div>
+
+<div class="screen-shade" *ngIf="isUploadInProgress">
+  <mat-spinner mode="indeterminate" color="accent"></mat-spinner>
+</div>

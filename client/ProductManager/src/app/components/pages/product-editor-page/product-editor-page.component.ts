@@ -11,6 +11,7 @@ import { ProductsStoreService } from 'src/app/core/services';
 export class ProductEditorPageComponent implements OnInit {
   // undefined if in add mode
   productToEdit?: Product;
+  isUploadInProgress = false;
 
   constructor(
     private router: Router,
@@ -26,6 +27,9 @@ export class ProductEditorPageComponent implements OnInit {
   }
 
   handleSubmitProduct(product: Product) {
+    if(this.isUploadInProgress)
+      return;
+
     // if editting mode else add mode
     if (this.productToEdit?.id) {
       this.handleEditProduct(product);
@@ -42,15 +46,22 @@ export class ProductEditorPageComponent implements OnInit {
     );
 
     if (confirmAction) {
+      this.isUploadInProgress = true;
+
       const sub = this.productStore
         .update(this.productToEdit.id, product)
         ?.subscribe(
           () => {
+            this.isUploadInProgress = false;
+            sub?.unsubscribe();
             alert('The product was updated successfully');
             this.router.navigate(['products']);
-            sub?.unsubscribe();
           },
-          () => alert('Something went wrong!')
+          () => {
+            this.isUploadInProgress = false;
+            sub?.unsubscribe();
+            alert('Something went wrong!');
+          }
         );
     }
   };
@@ -61,14 +72,20 @@ export class ProductEditorPageComponent implements OnInit {
     const confirmAction = confirm(`Are you sure to add this product?`);
 
     if (confirmAction) {
+      this.isUploadInProgress = true;
+
       const sub = this.productStore.add(product)?.subscribe(
         () => {
+          this.isUploadInProgress = false;
+          sub?.unsubscribe();
           alert('The product was added successfully');
           this.router.navigate(['products']);
-
-          sub?.unsubscribe();
         },
-        () => alert('Something went wrong!')
+        () => {
+          this.isUploadInProgress = false;
+          sub?.unsubscribe();
+          alert('Something went wrong!')
+        }
       );
     }
   };

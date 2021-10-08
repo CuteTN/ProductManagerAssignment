@@ -27,7 +27,7 @@
 
 <div class="mx-5 my-3" [hidden]="state === 'Error'">
   <div class="mat-elevation-z8 div-table">
-    <div class="products-loading-shade" *ngIf="state === 'Loading'">
+    <div class="screen-shade" *ngIf="state === 'Loading'">
       <mat-spinner mode="indeterminate" color="accent"></mat-spinner>
     </div>
     <products-table
