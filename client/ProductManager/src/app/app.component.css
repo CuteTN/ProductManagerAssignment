@@ -3,4 +3,5 @@
   height: 100vh;
   background-color: #ffebef;
   overflow: auto;
+  position: absolute;
 }

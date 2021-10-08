@@ -1,0 +1,8 @@
+.screen-wrapper {
+  overflow: hidden;
+  width: 100vw;
+  height: 100vh;
+  background-image: url("../../../../assets/home-bg.jpg");
+  background-size: 100%;
+  opacity: 0.9;
+}

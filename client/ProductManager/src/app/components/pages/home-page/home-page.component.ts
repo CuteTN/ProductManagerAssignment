@@ -39,6 +39,10 @@ export class HomePageComponent implements OnInit {
     this.router.navigate(['login']);
   }
 
+  handleRegisterClick() {
+    this.router.navigate(['register']);
+  }
+
   handleLogoutClick() {
     const sub = this.authManager.logout().subscribe(() => {
       sub.unsubscribe();

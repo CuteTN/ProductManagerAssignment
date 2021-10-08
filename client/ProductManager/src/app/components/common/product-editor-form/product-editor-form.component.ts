@@ -8,7 +8,7 @@ import {
   CategoriesStoreService,
   SuppliersStoreService,
 } from 'src/app/core/services';
-import { SupplierValidators } from './supplier.validator';
+import { SupplierValidators } from '../../../core/form-validators/supplier.validator';
 
 @Component({
   selector: 'product-editor-form',

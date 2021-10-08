@@ -35,6 +35,7 @@ import { RefreshTokenAndRetryInterceptor } from './core/interceptors/refresh-tok
     Components.MyDialogComponent,
     Components.ProductsFilterFormComponent,
     Components.LoginPageComponent,
+    Components.RegisterPageComponent,
 
     AppComponent,
   ],

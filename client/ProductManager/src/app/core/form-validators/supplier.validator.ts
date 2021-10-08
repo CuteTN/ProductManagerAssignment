@@ -1,5 +1,4 @@
 import { AbstractControl, ValidationErrors } from '@angular/forms';
-import { Supplier } from '../../../core/models'
 
 export class SupplierValidators {
   static mustHasIdOrNull(control: AbstractControl): ValidationErrors | null {

@@ -20,13 +20,17 @@ export class LoginPageComponent {
     private authManager: AuthManagerService
   ) {
     this.form = formBuilder.group({
-      username: [undefined, [Validators.required]],
+      username: [history.state.username, [Validators.required]],
       password: [undefined, [Validators.required]],
     });
   }
 
   handleToHomeClick() {
     this.router.navigate(['']);
+  }
+
+  handleResetButtonClick() {
+    this.responseError = null;
   }
 
   handleSubmitClick = () => {

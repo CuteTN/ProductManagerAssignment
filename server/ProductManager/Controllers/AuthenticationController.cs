@@ -64,7 +64,7 @@ namespace ProductManager.Controllers
       if (result.Succeeded)
         return Ok(result);
       else
-        return StatusCode(StatusCodes.Status500InternalServerError, result);
+        return StatusCode(StatusCodes.Status422UnprocessableEntity, result);
     }
 
     [HttpPost("login")]
