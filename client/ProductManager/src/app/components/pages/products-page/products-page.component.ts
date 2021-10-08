@@ -116,13 +116,16 @@ export class ProductsPageComponent implements OnInit {
     if (product.id)
       if (
         confirm(`Are you sure to delete the product with ID = ${product.id}?`)
-      )
-        this.productsStore.delete(product.id)?.subscribe(
+      ) {
+        const sub = this.productsStore.delete(product.id)?.subscribe(
           () => {
             alert('The product was removed successfully');
             this.refreshData();
+
+            sub?.unsubscribe();
           },
           () => alert('Something went wrong!')
         );
+      }
   };
 }

@@ -1,10 +1,5 @@
 import { Component } from '@angular/core';
-import {
-  FormBuilder,
-  FormControl,
-  FormGroup,
-  Validators,
-} from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AuthManagerService } from 'src/app/core/services';
 
@@ -15,6 +10,9 @@ import { AuthManagerService } from 'src/app/core/services';
 })
 export class LoginPageComponent {
   form: FormGroup;
+  responseError?: { message: string } | null;
+  passwordVisibility: boolean = false;
+  isLoginInProgress: boolean = false;
 
   constructor(
     formBuilder: FormBuilder,
@@ -33,13 +31,27 @@ export class LoginPageComponent {
 
   handleSubmitClick = () => {
     if (!this.form.valid) return;
+    this.responseError = null;
+
     const { username, password } = this.form.value;
 
     if (username && password) {
-      const sub = this.authManager
-        .login(username, password)
-        .subscribe(() => sub.unsubscribe());
-      this.router.navigate(['']);
+      this.isLoginInProgress = true;
+
+      const sub = this.authManager.login(username, password).subscribe(
+        () => {
+          this.isLoginInProgress = false;
+          sub.unsubscribe();
+          alert(`Logged in successfully with username ${username}`);
+          this.router.navigate(['']);
+        },
+        (error) => {
+          this.isLoginInProgress = false;
+          const { message } = error?.error ?? {};
+          if(message)
+            this.responseError = { message };
+        }
+      );
     }
   };
 }

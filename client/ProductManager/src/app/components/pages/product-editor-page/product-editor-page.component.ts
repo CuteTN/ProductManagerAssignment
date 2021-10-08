@@ -28,27 +28,48 @@ export class ProductEditorPageComponent implements OnInit {
   handleSubmitProduct(product: Product) {
     // if editting mode else add mode
     if (this.productToEdit?.id) {
-      if (
-        confirm(
-          `Are you sure to update the product with ID = ${this.productToEdit.id}?`
-        )
-      )
-        this.productStore.update(this.productToEdit.id, product)?.subscribe(
+      this.handleEditProduct(product);
+    } else {
+      this.handleAddProduct(product);
+    }
+  }
+
+  handleEditProduct = (product: Product) => {
+    if (!this.productToEdit?.id) return;
+
+    const confirmAction = confirm(
+      `Are you sure to update the product with ID = ${this.productToEdit.id}?`
+    );
+
+    if (confirmAction) {
+      const sub = this.productStore
+        .update(this.productToEdit.id, product)
+        ?.subscribe(
           () => {
             alert('The product was updated successfully');
             this.router.navigate(['products']);
-          },
-          () => alert('Something went wrong!')
-        );
-    } else {
-      if (confirm(`Are you sure to add this product?`))
-        this.productStore.add(product)?.subscribe(
-          () => {
-            alert('The product was added successfully');
-            this.router.navigate(['products']);
+            sub?.unsubscribe();
           },
           () => alert('Something went wrong!')
         );
     }
-  }
+  };
+
+  handleAddProduct = (product: Product) => {
+    if (this.productToEdit?.id) return;
+
+    const confirmAction = confirm(`Are you sure to add this product?`);
+
+    if (confirmAction) {
+      const sub = this.productStore.add(product)?.subscribe(
+        () => {
+          alert('The product was added successfully');
+          this.router.navigate(['products']);
+
+          sub?.unsubscribe();
+        },
+        () => alert('Something went wrong!')
+      );
+    }
+  };
 }

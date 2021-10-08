@@ -73,7 +73,7 @@ namespace ProductManager.Controllers
       var user = await _userManager.FindByNameAsync(loginRequestDto.UserName);
 
       if (user == null)
-        return Unauthorized(new { message = $"There is no user whose name is {loginRequestDto.UserName}" });
+        return Unauthorized(new { message = $"Username {loginRequestDto.UserName} does not exist."});
 
       if (!await _userManager.CheckPasswordAsync(user, loginRequestDto.Password))
         return Unauthorized(new { message = $"The provided password is incorrect" });

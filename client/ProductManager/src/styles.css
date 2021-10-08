@@ -19,6 +19,10 @@ body {
   color: #f44336;
 }
 
+.password-visibility-icon {
+  cursor: pointer;
+}
+
 /* @media screen and (max-width: 767px) and (orientation: landscape) {
   html {
     transform: rotate(-90deg);
