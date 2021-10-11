@@ -7,6 +7,8 @@ const REFRESH_TOKEN_KEY = "refresh-token";
   providedIn: 'root'
 })
 export class LocalstorageTokensProviderService {
+  constructor() {};
+
   set accessToken(token: string|null|undefined) {
     if(token != null)
       localStorage.setItem(ACCESS_TOKEN_KEY, token);

@@ -5,6 +5,7 @@ import {
   MAT_MOMENT_DATE_ADAPTER_OPTIONS,
 } from '@angular/material-moment-adapter';
 
+import * as Services from './core/services';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -14,13 +15,12 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
 import { AppRouterModule } from './core/routers/app-router.module';
 import { AppAngularMaterialModule } from './core/materials/app-angular-mat.module';
 import { ReactiveFormsModule } from '@angular/forms';
+import { MAT_DATE_LOCALE } from '@angular/material/core';
+import { JwtModule } from '@auth0/angular-jwt';
 
 // components ///////////////////////////////////////////////////////////
 import * as Components from './components';
 import { AppStoreModule } from './core/ngrx/app-store.module';
-import * as Services from './core/services';
-import { MAT_DATE_LOCALE } from '@angular/material/core';
-import { JwtModule } from '@auth0/angular-jwt';
 import { RefreshTokenAndRetryInterceptor } from './core/interceptors/refresh-token-and-retry.interceptor';
 
 @NgModule({
@@ -36,6 +36,7 @@ import { RefreshTokenAndRetryInterceptor } from './core/interceptors/refresh-tok
     Components.ProductsFilterFormComponent,
     Components.LoginPageComponent,
     Components.RegisterPageComponent,
+    Components.NavbarComponent,
 
     AppComponent,
   ],
@@ -46,14 +47,14 @@ import { RefreshTokenAndRetryInterceptor } from './core/interceptors/refresh-tok
     HttpClientModule,
     ReactiveFormsModule,
     AppStoreModule,
-    AppRouterModule,
     AppAngularMaterialModule,
     MatMomentDateModule,
     JwtModule.forRoot({
       config: {
         // tokenGetter:  () => localStorage.getItem('access_token')
       }
-    })
+    }),
+    AppRouterModule,
   ],
   providers: [
     // Services.StateStoreService,
@@ -63,6 +64,7 @@ import { RefreshTokenAndRetryInterceptor } from './core/interceptors/refresh-tok
     Services.ProductApiService,
     Services.SuppliersStoreService,
     Services.SupplierApiService,
+    Services.LocalstorageTokensProviderService,
 
     { provide: ErrorHandler, useClass: AppErrorHandler },
     { provide: MAT_DATE_LOCALE, useValue: 'en-GB' },

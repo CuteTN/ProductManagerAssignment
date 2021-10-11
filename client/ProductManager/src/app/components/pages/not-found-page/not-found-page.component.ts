@@ -8,8 +8,4 @@ import { Router } from '@angular/router';
 })
 export class NotFoundPageComponent {
   constructor(private router: Router) {}
-
-  handleToHomeClick() {
-    this.router.navigate(['']);
-  }
 }

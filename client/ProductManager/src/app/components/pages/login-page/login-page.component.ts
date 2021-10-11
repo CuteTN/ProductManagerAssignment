@@ -25,10 +25,6 @@ export class LoginPageComponent {
     });
   }
 
-  handleToHomeClick() {
-    this.router.navigate(['']);
-  }
-
   handleResetButtonClick() {
     this.responseError = null;
   }

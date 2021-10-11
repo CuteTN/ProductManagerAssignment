@@ -1,0 +1,57 @@
+<mat-toolbar color="accent">
+  <a
+    mat-flat-button
+    color="accent"
+    [routerLink]="['/']"
+    [routerLinkActiveOptions]="{ exact: true }"
+    routerLinkActive="a-active"
+  >
+    <mat-icon> home </mat-icon> Home
+  </a>
+  <a
+    mat-flat-button
+    color="accent"
+    [routerLink]="['/products']"
+    [routerLinkActiveOptions]="{ exact: true }"
+    routerLinkActive="a-active"
+  >
+    <mat-icon> list_alt </mat-icon> Products
+  </a>
+
+  <a
+    mat-flat-button
+    color="accent"
+    [routerLink]="['/product/add']"
+    [routerLinkActiveOptions]="{ exact: true }"
+    routerLinkActive="a-active"
+  >
+    <mat-icon> add_circle </mat-icon> New product
+  </a>
+
+  <span class="spacer"></span>
+
+  <a
+    mat-flat-button
+    color="accent"
+    [routerLink]="['/login']"
+    [routerLinkActiveOptions]="{ exact: true }"
+    routerLinkActive="a-active"
+    *ngIf="!username"
+  >
+    <mat-icon> no_accounts </mat-icon> Sign in
+  </a>
+
+  <a
+    mat-flat-button
+    color="accent"
+    [routerLinkActiveOptions]="{ exact: true }"
+    routerLinkActive="a-active"
+    *ngIf="username"
+    [mat-menu-trigger-for]="userOptions"
+  >
+    <mat-icon> account_circle </mat-icon> {{ username }}
+  </a>
+  <mat-menu #userOptions xPosition="before">
+    <button mat-menu-item (click)="handleLogoutClick()">Sign out</button>
+  </mat-menu>
+</mat-toolbar>

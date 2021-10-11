@@ -13,54 +13,7 @@ import { MyDialogComponent, MyDialogData } from '../..';
 export class HomePageComponent implements OnInit {
   
   constructor(
-    private router: Router,
-    private tokenProvider: LocalstorageTokensProviderService,
-    private jwtHelper: JwtHelperService,
-    private authManager: AuthManagerService,
-    public dialog: MatDialog
   ) {}
-
-  get username() {
-    const token = this.tokenProvider.accessToken;
-    return this.jwtHelper.decodeToken(token ?? undefined)?.username;
-  }
     
   ngOnInit(): void {}
-
-  handleToProductsClick() {
-    this.router.navigate(['products']);
-  }
-
-  handleAddProductClick() {
-    this.router.navigate(['product/editor']);
-  }
-
-  handleLoginClick() {
-    this.router.navigate(['login']);
-  }
-
-  handleRegisterClick() {
-    this.router.navigate(['register']);
-  }
-
-  handleLogoutClick() {
-    const sub = this.authManager.logout().subscribe(() => {
-      sub.unsubscribe();
-    });
-  }
-
-  handleTestNotiClick() {
-    const myDialogData: MyDialogData = {
-      title: 'Just a test',
-      text: 'Yey man',
-      duration: 3000,
-      loading: true,
-      buttons: [
-      ],
-    };
-
-    const dialogRef = this.dialog.open(MyDialogComponent, {
-      data: myDialogData,
-    });
-  }
 }

@@ -19,6 +19,8 @@ import { MatSortModule } from '@angular/material/sort';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatToolbarModule } from '@angular/material/toolbar';
+import { MatMenuModule } from '@angular/material/menu';
 
 const MODULES_LIST = [
   MatTableModule,
@@ -41,6 +43,8 @@ const MODULES_LIST = [
   MatExpansionModule,
   MatProgressBarModule,
   MatCheckboxModule,
+  MatToolbarModule,
+  MatMenuModule,
 ];
 
 @NgModule({

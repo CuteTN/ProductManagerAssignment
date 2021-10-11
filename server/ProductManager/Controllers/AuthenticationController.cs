@@ -111,7 +111,7 @@ namespace ProductManager.Controllers
       var refreshToken = TokenFactory.Generate(
         user.UserName,
         userRoles,
-        new DateTime().AddDays(10),
+        new DateTime().AddDays(30),
         "refresh",
         _configuration
       );

@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 import { PageEvent } from '@angular/material/paginator';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
@@ -10,6 +11,7 @@ import {
   ProductSortRule,
 } from 'src/app/core/services';
 import { ProductsStoreService } from 'src/app/core/services/store';
+import { MyDialogComponent, MyDialogData } from '../..';
 
 @Component({
   selector: 'products-page',
@@ -32,7 +34,8 @@ export class ProductsPageComponent implements OnInit {
   constructor(
     private productsStore: ProductsStoreService,
     private apiService: ProductApiService,
-    private router: Router
+    private router: Router,
+    private matDialog: MatDialog
   ) {
     this.productsCount$ = apiService.getCount(
       this.filterParams
@@ -41,10 +44,6 @@ export class ProductsPageComponent implements OnInit {
   }
 
   ngOnInit(): void {}
-
-  handleToHomeClick() {
-    this.router.navigate(['']);
-  }
 
   handleAddProductClick = () => {
     this.router.navigate(['product/editor']);
@@ -105,11 +104,16 @@ export class ProductsPageComponent implements OnInit {
   };
 
   handleRefreshClick = () => {
-    this.refreshData();
+    const dialogData: MyDialogData = {
+      title: "Test",
+      text: "No bug yay"
+    }
+    this.matDialog.open(MyDialogComponent, { data: dialogData });
+    // this.refreshData();
   };
 
   handleEditProductClick = (product: Product) => {
-    this.router.navigate(['product/editor'], { state: { product } });
+    this.router.navigate(['product/edit/', product.id], { state: { product } });
   };
 
   handleRemoveProductClick = (product: Product) => {

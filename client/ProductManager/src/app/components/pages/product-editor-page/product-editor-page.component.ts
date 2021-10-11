@@ -22,10 +22,6 @@ export class ProductEditorPageComponent implements OnInit {
     this.productToEdit = history.state.product;
   }
 
-  handleToHomeClick() {
-    this.router.navigate(['']);
-  }
-
   handleSubmitProduct(product: Product) {
     if(this.isUploadInProgress)
       return;

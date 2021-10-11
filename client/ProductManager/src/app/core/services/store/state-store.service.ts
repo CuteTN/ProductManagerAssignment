@@ -9,10 +9,10 @@ import { DataApiService } from '../apis/data-api.service';
  * connect data API service with ngrx
  * Provide an optimization and simplification for accessing data
  */
-@Injectable({
-  providedIn: 'root',
-})
-export class StateStoreService<TItem> {
+ @Injectable({
+   providedIn: 'root',
+ })
+export class StateStoreService {
   apiService?: DataApiService;
 
   private _isLoaded: boolean = false;
@@ -20,27 +20,27 @@ export class StateStoreService<TItem> {
     return this._isLoaded;
   }
 
-  private _value: Observable<TItem[]>;
+  private _value: Observable<any[]>;
 
   constructor(
-    public store: Store<AppState>,
-    @Inject('selector') selector: (state: AppState) => any
+    @Inject(Store) public store: Store<AppState>,
+    @Inject(Function) selector: (state: AppState) => any
   ) {
     this._value = store.select(selector);
   }
 
   // factory methods
-  protected createSetAllAction?: (items: TItem[], ...opt: any) => Action;
+  protected createSetAllAction?: (items: any[], ...opt: any) => Action;
   protected createResetAction?: (...opt: any) => Action;
-  protected createAddAction?: (item: TItem, ...opt: any) => Action;
-  protected createUpdateAction?: (item: TItem, ...opt: any) => Action;
+  protected createAddAction?: (item: any, ...opt: any) => Action;
+  protected createUpdateAction?: (item: any, ...opt: any) => Action;
   protected createDeleteAction?: (id: number, ...opt: any) => Action;
 
   fetchAll() {
     return this.apiService?.getAll().pipe(
       map(
         (response) => {
-          const action = this.createSetAllAction?.(response as TItem[]);
+          const action = this.createSetAllAction?.(response as any[]);
           if (action) this.store.dispatch(action);
           this._isLoaded = true;
           return response;
@@ -67,13 +67,13 @@ export class StateStoreService<TItem> {
   }
 
   add(
-    item: TItem,
+    item: any,
     ...opt: any
   ) {
     return this.apiService?.create(item).pipe(
       map(
         (response) => {
-          const action = this.createAddAction?.(response as TItem, opt);
+          const action = this.createAddAction?.(response as any, opt);
           if (action) this.store.dispatch(action);
           return response; 
         }
@@ -81,10 +81,10 @@ export class StateStoreService<TItem> {
     );
   }
 
-  update(id: number, item: TItem, ...opt: any) {
+  update(id: number, item: any, ...opt: any) {
     return this.apiService?.update(id, item).pipe(
       map((response) => {
-        const action = this.createUpdateAction?.(response as TItem, opt);
+        const action = this.createUpdateAction?.(response as any, opt);
         if (action) this.store.dispatch(action);
         return response;
       }),

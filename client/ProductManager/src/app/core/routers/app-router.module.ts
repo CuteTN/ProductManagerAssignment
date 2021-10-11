@@ -3,7 +3,8 @@ import * as Pages from '../../components/pages'
 
 export const AppRouterModule = RouterModule.forRoot([
   { path: 'products', component: Pages.ProductsPageComponent },
-  { path: 'product/editor', component: Pages.ProductEditorPageComponent},
+  { path: 'product/add', component: Pages.ProductEditorPageComponent},
+  { path: 'product/edit/:id', component: Pages.ProductEditorPageComponent},
   { path: 'login', component: Pages.LoginPageComponent},
   { path: 'register', component: Pages.RegisterPageComponent},
   { path: '', component: Pages.HomePageComponent },

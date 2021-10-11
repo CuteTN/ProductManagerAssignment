@@ -67,10 +67,6 @@ export class RegisterPageComponent {
     );
   }
 
-  handleToHomeClick() {
-    this.router.navigate(['']);
-  }
-
   handleResetButtonClick() {
     this.responseErrors = null;
   }

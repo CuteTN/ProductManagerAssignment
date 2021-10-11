@@ -6,6 +6,7 @@ namespace ProductManager.DAL
   public class UnitOfWork : IDisposable
   {
     private AppDbContext _context;
+    private readonly Dictionary<Type, object> reposotories = new Dictionary<Type, object>();
 
     public UnitOfWork(AppDbContext context)
     {
@@ -16,8 +17,6 @@ namespace ProductManager.DAL
     {
       _context.SaveChanges();
     }
-
-    private readonly Dictionary<Type, object> reposotories = new Dictionary<Type, object>();
 
     public GenericRepository<T> Repository<T>()
         where T : class
