@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Product } from 'src/app/core/models';
-import { ProductsStoreService } from 'src/app/core/services';
+import { ProductApiService, ProductsStoreService } from 'src/app/core/services';
+import { CLIENT_NO_AUTH_PARAMS } from 'src/app/core/utils/client-no-auth';
 
 @Component({
   selector: 'product-editor-page',
@@ -10,16 +11,58 @@ import { ProductsStoreService } from 'src/app/core/services';
 })
 export class ProductEditorPageComponent implements OnInit {
   // undefined if in add mode
+  productId?: number | null;
   productToEdit?: Product;
+  isLoadingFromServer = false;
   isUploadInProgress = false;
+  fetchingState: "loaded" | "loading" | "error" | "none" = "none";
 
   constructor(
     private router: Router,
-    private productStore: ProductsStoreService
+    private route: ActivatedRoute,
+    private productStore: ProductsStoreService,
+    private productApiService: ProductApiService
   ) {}
 
   ngOnInit(): void {
-    this.productToEdit = history.state.product;
+    // NOTE: the ID cannot change.
+    const productIdStr = this.route.snapshot.paramMap.get('id');
+    if(productIdStr)
+    {
+      this.productId = parseInt(productIdStr);
+
+      this.productToEdit = history.state.product;
+
+      if(!this.productToEdit) {
+        this.fetchProductFromServer();
+      }
+    }
+  }
+
+  /**
+   * WARNING: make sure that this function is only called successfully once
+   */
+  fetchProductFromServer = () => {
+    if(!this.productId)
+      return;
+
+    this.fetchingState = "loading";
+    const sub = this.productApiService.getById(this.productId, { params: CLIENT_NO_AUTH_PARAMS }).subscribe(
+      (response) => {
+        this.productToEdit = (response as unknown) as Product;
+        this.fetchingState = "loaded";
+        sub.unsubscribe();
+      },
+      (error) => {
+        this.fetchingState = "error";
+        sub.unsubscribe();
+      } 
+    );
+
+  }
+
+  handleRefreshClick = () => {
+    this.fetchProductFromServer();
   }
 
   handleSubmitProduct(product: Product) {

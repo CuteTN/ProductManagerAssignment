@@ -104,12 +104,7 @@ export class ProductsPageComponent implements OnInit {
   };
 
   handleRefreshClick = () => {
-    const dialogData: MyDialogData = {
-      title: "Test",
-      text: "No bug yay"
-    }
-    this.matDialog.open(MyDialogComponent, { data: dialogData });
-    // this.refreshData();
+    this.refreshData();
   };
 
   handleEditProductClick = (product: Product) => {

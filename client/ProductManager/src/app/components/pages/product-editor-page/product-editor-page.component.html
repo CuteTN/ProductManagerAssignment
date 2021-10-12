@@ -1,9 +1,37 @@
 <div class="mx-2 mx-md-3 mx-lg-5 my-3">
+  <div *ngIf="fetchingState === 'none' || fetchingState === 'loaded' then productForm else fetchUnloaded"></div>
+</div>
+
+<ng-template #productForm>
   <product-editor-form
+    *ngIf="(!productId) || productToEdit"
     [initial-product]="productToEdit"
     (on-submit)="handleSubmitProduct($event)"
   ></product-editor-form>
-</div>
+</ng-template>
+
+<ng-template #fetchUnloaded>
+  <div *ngIf="fetchingState === 'loading' then fetchLoading else fetchError"></div>
+</ng-template>
+
+<ng-template #fetchLoading>
+  <div class="d-flex justify-content-center">
+    <mat-spinner mode="indeterminate" color="accent"></mat-spinner>
+  </div>
+</ng-template>
+
+<ng-template #fetchError>
+  <div class="container">
+    <div class="d-flex row justify-content-center">
+      <h2 class="text-center">Hey, it looks like something went wrong 🥺</h2>
+    </div>
+    <div class="d-flex row justify-content-center">
+      <button mat-fab (click)="handleRefreshClick()">
+        <mat-icon>refresh</mat-icon>
+      </button>
+    </div>
+  </div>
+</ng-template>
 
 <div class="screen-shade" *ngIf="isUploadInProgress">
   <mat-spinner mode="indeterminate" color="accent"></mat-spinner>

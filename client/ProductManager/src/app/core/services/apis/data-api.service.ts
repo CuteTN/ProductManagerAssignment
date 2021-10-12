@@ -21,9 +21,9 @@ export class DataApiService {
       .get(this.url)
       .pipe(catchError(this.handleError));
 
-  getById = (id: number) =>
+  getById = (id: number, options?: any) =>
     this.http
-      .get(`${this.url}/${id}`)
+      .get(`${this.url}/${id}`, options)
       .pipe(catchError(this.handleError));
 
   create = (data: any) =>
