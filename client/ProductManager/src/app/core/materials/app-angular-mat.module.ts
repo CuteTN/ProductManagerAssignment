@@ -21,6 +21,7 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatMenuModule } from '@angular/material/menu';
+import { MatGridListModule } from '@angular/material/grid-list';
 
 const MODULES_LIST = [
   MatTableModule,
@@ -45,6 +46,7 @@ const MODULES_LIST = [
   MatCheckboxModule,
   MatToolbarModule,
   MatMenuModule,
+  MatGridListModule,
 ];
 
 @NgModule({

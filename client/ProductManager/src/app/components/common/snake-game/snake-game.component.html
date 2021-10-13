@@ -1,0 +1,20 @@
+<div>
+  <mat-grid-list [cols]="GAME_COLUMNS" rowHeight="1:1">
+    <mat-grid-tile
+      *ngFor="let tile of gameViewTiles | flat; let i = index "
+      class="tile"
+      [ngClass]="{
+        'tile-activated': isGameRunning,
+        'tile-snake': tile.state === 'snake0' || tile.state === 'snake4'
+      }"
+    >
+      <!-- {{tile.state}} -->
+      <div [ngSwitch]="tile.state">
+        <div *ngSwitchCase="'empty'"></div>
+        <div *ngSwitchCase="'food'">{{foodIcon}}</div>
+        <div *ngSwitchCase="'snake0'" class="tile-snake">0</div>
+        <div *ngSwitchCase="'snake4'" class="tile-snake">4</div>
+      </div>
+    </mat-grid-tile>
+  </mat-grid-list>
+</div>

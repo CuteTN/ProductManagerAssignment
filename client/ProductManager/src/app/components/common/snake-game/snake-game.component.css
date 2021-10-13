@@ -1,0 +1,16 @@
+.tile {
+  border-radius: 20%;
+  
+  font-size: xx-large;
+  font-weight: 20px;
+  font-family: 'Consolas';
+  color: white;
+}
+
+.tile-activated {
+  background-color: #ffb7c2;
+}
+
+.tile-snake {
+  background-color: #ff6a81;
+}

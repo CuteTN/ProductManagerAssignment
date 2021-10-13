@@ -21,9 +21,11 @@ import { ToastrModule } from 'ngx-toastr';
 
 // components ///////////////////////////////////////////////////////////
 import * as Components from './components';
+import * as Pipes from './core/pipes';
 import { AppStoreModule } from './core/ngrx/app-store.module';
 import { RefreshTokenAndRetryInterceptor } from './core/interceptors/refresh-token-and-retry.interceptor';
 import { APP_TOAST_CONFIG } from './core/utils/toastr.config';
+import { SnakeGameComponent } from './components/common/snake-game/snake-game.component';
 
 @NgModule({
   declarations: [
@@ -39,7 +41,9 @@ import { APP_TOAST_CONFIG } from './core/utils/toastr.config';
     Components.LoginPageComponent,
     Components.RegisterPageComponent,
     Components.NavbarComponent,
+    Components.SnakeGameComponent,
 
+    Pipes.FlatPipe,
     AppComponent,
   ],
   imports: [
