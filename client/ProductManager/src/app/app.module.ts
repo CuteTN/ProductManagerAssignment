@@ -17,11 +17,13 @@ import { AppAngularMaterialModule } from './core/materials/app-angular-mat.modul
 import { ReactiveFormsModule } from '@angular/forms';
 import { MAT_DATE_LOCALE } from '@angular/material/core';
 import { JwtModule } from '@auth0/angular-jwt';
+import { ToastrModule } from 'ngx-toastr';
 
 // components ///////////////////////////////////////////////////////////
 import * as Components from './components';
 import { AppStoreModule } from './core/ngrx/app-store.module';
 import { RefreshTokenAndRetryInterceptor } from './core/interceptors/refresh-token-and-retry.interceptor';
+import { APP_TOAST_CONFIG } from './core/utils/toastr.config';
 
 @NgModule({
   declarations: [
@@ -49,11 +51,8 @@ import { RefreshTokenAndRetryInterceptor } from './core/interceptors/refresh-tok
     AppStoreModule,
     AppAngularMaterialModule,
     MatMomentDateModule,
-    JwtModule.forRoot({
-      config: {
-        // tokenGetter:  () => localStorage.getItem('access_token')
-      }
-    }),
+    JwtModule.forRoot({ config: {} }),
+    ToastrModule.forRoot(APP_TOAST_CONFIG),
     AppRouterModule,
   ],
   providers: [
@@ -69,7 +68,11 @@ import { RefreshTokenAndRetryInterceptor } from './core/interceptors/refresh-tok
     { provide: ErrorHandler, useClass: AppErrorHandler },
     { provide: MAT_DATE_LOCALE, useValue: 'en-GB' },
     { provide: MAT_MOMENT_DATE_ADAPTER_OPTIONS, useValue: { useUtc: true } },
-    { provide: HTTP_INTERCEPTORS, useClass: RefreshTokenAndRetryInterceptor, multi: true },
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: RefreshTokenAndRetryInterceptor,
+      multi: true,
+    },
     MatDatepickerModule,
   ],
   bootstrap: [AppComponent],

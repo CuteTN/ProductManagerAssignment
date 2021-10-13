@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
+import { ToastrService } from 'ngx-toastr';
 import { AuthManagerService } from 'src/app/core/services';
 
 @Component({
@@ -17,7 +18,8 @@ export class LoginPageComponent {
   constructor(
     formBuilder: FormBuilder,
     private router: Router,
-    private authManager: AuthManagerService
+    private authManager: AuthManagerService,
+    private toastr: ToastrService
   ) {
     this.form = formBuilder.group({
       username: [history.state.username, [Validators.required]],
@@ -42,7 +44,10 @@ export class LoginPageComponent {
         () => {
           this.isLoginInProgress = false;
           sub.unsubscribe();
-          alert(`Logged in successfully with username ${username}`);
+          this.toastr.success(
+            `Welcome back, ${username}!`,
+            `Logged in`
+          )
           this.router.navigate(['']);
         },
         (error) => {

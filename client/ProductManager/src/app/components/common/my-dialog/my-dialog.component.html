@@ -11,6 +11,7 @@
     mat-flat-button
     [mat-dialog-close]="{ reason: 'BUTTON', button: btn.text }"
     [color]="btn.color"
+    (click)="handleButtonClick(btn)"
   >
     {{ btn.text }}
   </button>

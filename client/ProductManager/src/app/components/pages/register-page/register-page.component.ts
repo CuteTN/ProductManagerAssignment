@@ -16,6 +16,7 @@ import {
 import { ErrorStateMatcher } from '@angular/material/core';
 import { passwordValidator } from 'src/app/core/form-validators/password.validator';
 import { PasswordMeter } from 'password-meter';
+import { ToastrService } from 'ngx-toastr';
 
 class ConfirmPasswordErrorStateMatcher implements ErrorStateMatcher {
   isErrorState(
@@ -54,7 +55,8 @@ export class RegisterPageComponent {
   constructor(
     formBuilder: FormBuilder,
     private router: Router,
-    private authenticationApiService: AuthenticationApiService
+    private authenticationApiService: AuthenticationApiService,
+    private toastr: ToastrService
   ) {
     this.form = formBuilder.group(
       {
@@ -86,7 +88,10 @@ export class RegisterPageComponent {
           () => {
             this.isRegisterInProgress = false;
             sub.unsubscribe();
-            alert(`User ${username} has been successfully registered!`);
+            this.toastr.success(
+              `Hi, ${username}, please log in to continue!`,
+              `Registered!`
+            )
             this.router.navigate(['login'], { state: { username } });
           },
           (error) => {

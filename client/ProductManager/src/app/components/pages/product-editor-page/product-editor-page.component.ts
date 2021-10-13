@@ -1,8 +1,11 @@
 import { Component, OnInit } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
+import { ToastrService } from 'ngx-toastr';
 import { Product } from 'src/app/core/models';
 import { ProductApiService, ProductsStoreService } from 'src/app/core/services';
 import { CLIENT_NO_AUTH_PARAMS } from 'src/app/core/utils/client-no-auth';
+import { MyDialogComponent, MyDialogData } from '../..';
 
 @Component({
   selector: 'product-editor-page',
@@ -15,25 +18,26 @@ export class ProductEditorPageComponent implements OnInit {
   productToEdit?: Product;
   isLoadingFromServer = false;
   isUploadInProgress = false;
-  fetchingState: "loaded" | "loading" | "error" | "none" = "none";
+  fetchingState: 'loaded' | 'loading' | 'error' | 'none' = 'none';
 
   constructor(
     private router: Router,
     private route: ActivatedRoute,
     private productStore: ProductsStoreService,
-    private productApiService: ProductApiService
+    private productApiService: ProductApiService,
+    private toastr: ToastrService,
+    private matDialog: MatDialog
   ) {}
 
   ngOnInit(): void {
     // NOTE: the ID cannot change.
     const productIdStr = this.route.snapshot.paramMap.get('id');
-    if(productIdStr)
-    {
+    if (productIdStr) {
       this.productId = parseInt(productIdStr);
 
       this.productToEdit = history.state.product;
 
-      if(!this.productToEdit) {
+      if (!this.productToEdit) {
         this.fetchProductFromServer();
       }
     }
@@ -43,89 +47,131 @@ export class ProductEditorPageComponent implements OnInit {
    * WARNING: make sure that this function is only called successfully once
    */
   fetchProductFromServer = () => {
-    if(!this.productId)
-      return;
+    if (!this.productId) return;
 
-    this.fetchingState = "loading";
-    const sub = this.productApiService.getById(this.productId, { params: CLIENT_NO_AUTH_PARAMS }).subscribe(
-      (response) => {
-        this.productToEdit = (response as unknown) as Product;
-        this.fetchingState = "loaded";
-        sub.unsubscribe();
-      },
-      (error) => {
-        this.fetchingState = "error";
-        sub.unsubscribe();
-      } 
-    );
-
-  }
+    this.fetchingState = 'loading';
+    const sub = this.productApiService
+      .getById(this.productId, { params: CLIENT_NO_AUTH_PARAMS })
+      .subscribe(
+        (response) => {
+          this.productToEdit = response as unknown as Product;
+          this.fetchingState = 'loaded';
+          sub.unsubscribe();
+        },
+        (error) => {
+          this.fetchingState = 'error';
+          sub.unsubscribe();
+        }
+      );
+  };
 
   handleRefreshClick = () => {
     this.fetchProductFromServer();
-  }
+  };
 
   handleSubmitProduct(product: Product) {
-    if(this.isUploadInProgress)
-      return;
+    if (this.isUploadInProgress) return;
 
     // if editting mode else add mode
     if (this.productToEdit?.id) {
-      this.handleEditProduct(product);
+      this.handleConfirmAndEditProduct(product);
     } else {
-      this.handleAddProduct(product);
+      this.handleConfirmAndAddProduct(product);
     }
   }
 
-  handleEditProduct = (product: Product) => {
+  handleConfirmAndEditProduct = (product: Product) => {
     if (!this.productToEdit?.id) return;
 
-    const confirmAction = confirm(
-      `Are you sure to update the product with ID = ${this.productToEdit.id}?`
-    );
-
-    if (confirmAction) {
-      this.isUploadInProgress = true;
-
-      const sub = this.productStore
-        .update(this.productToEdit.id, product)
-        ?.subscribe(
-          () => {
-            this.isUploadInProgress = false;
-            sub?.unsubscribe();
-            alert('The product was updated successfully');
-            this.router.navigate(['products']);
+    const dialogData: MyDialogData = {
+      title: 'Update product?',
+      text: `Are you sure to update the product with ID = ${this.productToEdit.id}?`,
+      disableClose: true,
+      buttons: [
+        { text: 'No' },
+        {
+          text: 'Yes',
+          color: 'primary',
+          handle: () => {
+            this.editProduct(product);
           },
-          () => {
-            this.isUploadInProgress = false;
-            sub?.unsubscribe();
-            alert('Something went wrong!');
-          }
-        );
-    }
+        },
+      ],
+    };
+
+    this.matDialog.open(MyDialogComponent, { data: dialogData });
   };
 
-  handleAddProduct = (product: Product) => {
+  handleConfirmAndAddProduct = (product: Product) => {
     if (this.productToEdit?.id) return;
 
-    const confirmAction = confirm(`Are you sure to add this product?`);
+    const dialogData: MyDialogData = {
+      title: 'Add product?',
+      text: `Are you sure to add this product?`,
+      disableClose: true,
+      buttons: [
+        { text: 'No' },
+        {
+          text: 'Yes',
+          color: 'primary',
+          handle: () => {
+            this.addProduct(product);
+          },
+        },
+      ],
+    };
 
-    if (confirmAction) {
-      this.isUploadInProgress = true;
+    this.matDialog.open(MyDialogComponent, { data: dialogData });
+  };
 
-      const sub = this.productStore.add(product)?.subscribe(
-        () => {
+  editProduct(product: Product) {
+    if (!this.productToEdit?.id) return;
+
+    this.isUploadInProgress = true;
+
+    const sub = this.productStore
+      .update(this.productToEdit.id, product)
+      ?.subscribe(
+        (res) => {
           this.isUploadInProgress = false;
           sub?.unsubscribe();
-          alert('The product was added successfully');
           this.router.navigate(['products']);
+          this.toastr.success(
+            `The product with ID = ${this.productToEdit?.id} has been updated successfully.`,
+            'Product updated!'
+          );
         },
         () => {
           this.isUploadInProgress = false;
           sub?.unsubscribe();
-          alert('Something went wrong!')
+          this.toastr.error(
+            `Failed to update the product with ID = ${this.productToEdit?.id}.`,
+            'Error!'
+          );
         }
       );
-    }
-  };
+  }
+
+  addProduct(product: Product) {
+    this.isUploadInProgress = true;
+
+    const sub = this.productStore.add(product)?.subscribe(
+      (res) => {
+        this.isUploadInProgress = false;
+        sub?.unsubscribe();
+        this.router.navigate(['products']);
+        this.toastr.success(
+          `A new product with ID = ${
+            (res as any).id
+          } has been added successfully.`,
+          'Product added!'
+        );
+      },
+      () => {
+        this.isUploadInProgress = false;
+        sub?.unsubscribe();
+        this.toastr.error(`Failed to add the new product.`, 'Error!');
+      }
+    );
+  }
 }

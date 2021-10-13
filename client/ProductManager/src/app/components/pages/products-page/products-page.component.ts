@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { PageEvent } from '@angular/material/paginator';
 import { Router } from '@angular/router';
+import { ToastrService } from 'ngx-toastr';
 import { Observable } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 import { Product } from 'src/app/core/models';
@@ -35,7 +36,8 @@ export class ProductsPageComponent implements OnInit {
     private productsStore: ProductsStoreService,
     private apiService: ProductApiService,
     private router: Router,
-    private matDialog: MatDialog
+    private matDialog: MatDialog,
+    private toastr: ToastrService
   ) {
     this.productsCount$ = apiService.getCount(
       this.filterParams
@@ -111,20 +113,47 @@ export class ProductsPageComponent implements OnInit {
     this.router.navigate(['product/edit/', product.id], { state: { product } });
   };
 
-  handleRemoveProductClick = (product: Product) => {
-    if (product.id)
-      if (
-        confirm(`Are you sure to delete the product with ID = ${product.id}?`)
-      ) {
-        const sub = this.productsStore.delete(product.id)?.subscribe(
-          () => {
-            alert('The product was removed successfully');
-            this.refreshData();
+  private deleteProduct(product: Product) {
+    if (!product?.id) return;
 
-            sub?.unsubscribe();
-          },
-          () => alert('Something went wrong!')
+    const sub = this.productsStore.delete(product.id)?.subscribe(
+      () => {
+        this.toastr.success(
+          `The product with ID = ${product.id} has been deleted successfully.`,
+          `Product deleted!`
+        );
+        this.refreshData();
+
+        sub?.unsubscribe();
+      },
+      () => {
+        this.toastr.error(
+          `Failed to delete the product with ID = ${product.id}.`,
+          'Error!'
         );
       }
+    );
+  }
+
+  handleRemoveProductClick = (product: Product) => {
+    if (!product.id) return;
+
+    const dialogData: MyDialogData = {
+      title: 'Delete product?',
+      text: `Are you sure to delete the product with ID = ${product.id}?`,
+      disableClose: true,
+      buttons: [
+        { text: 'No' },
+        {
+          text: 'Yes',
+          color: 'primary',
+          handle: () => {
+            this.deleteProduct(product);
+          },
+        },
+      ],
+    };
+
+    this.matDialog.open(MyDialogComponent, { data: dialogData });
   };
 }

@@ -25,6 +25,10 @@ export class MyDialogComponent {
     this.data.buttons = this.data.buttons ?? [];
     this.data.disableClose = this.data.disableClose ?? false;
   }
+
+  handleButtonClick(button: DialogButtonConfig) {
+    button?.handle?.();
+  }
 }
 
 export interface MyDialogData {
@@ -39,4 +43,5 @@ export interface MyDialogData {
 interface DialogButtonConfig {
   text: string;
   color?: "primary" | "accent" | "warn";
+  handle?: () => void;
 }

@@ -46,6 +46,18 @@ navbar {
   z-index: 10;
 }
 
+
+@import '~ngx-toastr/toastr';
+@import '~ngx-toastr/toastr-bs4-alert';
+@import '~bootstrap/scss/functions';
+@import '~bootstrap/scss/variables';
+@import '~bootstrap/scss/mixins';
+@import '~ngx-toastr/toastr-bs4-alert';
+
+#toast-container > div {
+  opacity:1;
+}
+
 /* @media screen and (max-width: 767px) and (orientation: landscape) {
   html {
     transform: rotate(-90deg);
