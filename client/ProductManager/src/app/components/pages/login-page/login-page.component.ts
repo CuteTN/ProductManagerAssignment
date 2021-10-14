@@ -1,3 +1,4 @@
+import { Location } from '@angular/common';
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -19,7 +20,7 @@ export class LoginPageComponent {
     formBuilder: FormBuilder,
     private router: Router,
     private authManager: AuthManagerService,
-    private toastr: ToastrService
+    private toastr: ToastrService,
   ) {
     this.form = formBuilder.group({
       username: [history.state.username, [Validators.required]],
@@ -48,7 +49,7 @@ export class LoginPageComponent {
             `Welcome back, ${username}!`,
             `Logged in`
           )
-          this.router.navigate(['']);
+          this.routeBack();
         },
         (error) => {
           this.isLoginInProgress = false;
@@ -59,4 +60,9 @@ export class LoginPageComponent {
       );
     }
   };
+
+  private routeBack() {
+    let url = history.state?.backUrl ?? '';
+    this.router.navigate([url], { replaceUrl: true });
+  }
 }

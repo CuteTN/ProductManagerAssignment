@@ -92,7 +92,7 @@ export class RegisterPageComponent {
               `Hi, ${username}, please log in to continue!`,
               `Registered!`
             )
-            this.router.navigate(['login'], { state: { username } });
+            this.router.navigate(['login'], { state: { username }, replaceUrl: true });
           },
           (error) => {
             this.isRegisterInProgress = false;
