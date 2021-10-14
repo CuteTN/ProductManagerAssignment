@@ -127,13 +127,21 @@ export class ProductEditorPageComponent implements OnInit {
   editProduct(product: Product) {
     if (!this.productToEdit?.id) return;
 
-    this.isUploadInProgress = true;
+    const dialogData: MyDialogData = {
+      title: 'Uploading...',
+      loading: true,
+      disableClose: true,
+    };
+
+    const uploadingDialog = this.matDialog.open(MyDialogComponent, {
+      data: dialogData,
+    });
 
     const sub = this.productStore
       .update(this.productToEdit.id, product)
       ?.subscribe(
         (res) => {
-          this.isUploadInProgress = false;
+          uploadingDialog.close();
           sub?.unsubscribe();
           this.router.navigate(['products']);
           this.toastr.success(
@@ -142,7 +150,7 @@ export class ProductEditorPageComponent implements OnInit {
           );
         },
         () => {
-          this.isUploadInProgress = false;
+          uploadingDialog.close();
           sub?.unsubscribe();
           this.toastr.error(
             `Failed to update the product with ID = ${this.productToEdit?.id}.`,
@@ -153,11 +161,19 @@ export class ProductEditorPageComponent implements OnInit {
   }
 
   addProduct(product: Product) {
-    this.isUploadInProgress = true;
+    const dialogData: MyDialogData = {
+      title: 'Uploading...',
+      loading: true,
+      disableClose: true,
+    };
+
+    const uploadingDialog = this.matDialog.open(MyDialogComponent, {
+      data: dialogData,
+    });
 
     const sub = this.productStore.add(product)?.subscribe(
       (res) => {
-        this.isUploadInProgress = false;
+        uploadingDialog.close();
         sub?.unsubscribe();
         this.router.navigate(['products']);
         this.toastr.success(
@@ -168,7 +184,7 @@ export class ProductEditorPageComponent implements OnInit {
         );
       },
       () => {
-        this.isUploadInProgress = false;
+        uploadingDialog.close();
         sub?.unsubscribe();
         this.toastr.error(`Failed to add the new product.`, 'Error!');
       }

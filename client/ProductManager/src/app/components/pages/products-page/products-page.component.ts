@@ -3,7 +3,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { PageEvent } from '@angular/material/paginator';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
-import { Observable } from 'rxjs';
+import { Observable, of, throwError } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 import { Product } from 'src/app/core/models';
 import {
@@ -63,14 +63,29 @@ export class ProductsPageComponent implements OnInit {
 
   private fetchRequestedProducts = () => {
     this.state = 'Loading';
+
+    const dialogData: MyDialogData = {
+      title: 'Loading...',
+      loading: true,
+      disableClose: true,
+    }
+
+    const loadingWIPDialog = this.matDialog.open(MyDialogComponent, { data: dialogData })
+
     return (
       this.apiService.getSome(this.filterParams) as Observable<Product[]>
     ).pipe(
       map((res) => {
+        loadingWIPDialog.close();
         this.state = 'Loaded';
         return res;
       }),
-      catchError(() => (this.state = 'Error'))
+      catchError((err) => {
+        loadingWIPDialog.close();
+        this.state = 'Error'
+
+        return throwError(err);
+      })
     ) as Observable<Product[]>;
   };
 
@@ -116,8 +131,17 @@ export class ProductsPageComponent implements OnInit {
   private deleteProduct(product: Product) {
     if (!product?.id) return;
 
+    const dialogData: MyDialogData = {
+      title: 'Deleting...',
+      loading: true,
+      disableClose: true,
+    }
+
+    const deletingWIPDialog = this.matDialog.open(MyDialogComponent, { data: dialogData })
+
     const sub = this.productsStore.delete(product.id)?.subscribe(
       () => {
+        deletingWIPDialog.close();
         this.toastr.success(
           `The product with ID = ${product.id} has been deleted successfully.`,
           `Product deleted!`
@@ -127,6 +151,7 @@ export class ProductsPageComponent implements OnInit {
         sub?.unsubscribe();
       },
       () => {
+        deletingWIPDialog.close();
         this.toastr.error(
           `Failed to delete the product with ID = ${product.id}.`,
           'Error!'
