@@ -42,6 +42,7 @@ export class SnakeGameComponent implements OnInit, OnDestroy {
   snake: SnakeModel;
   food?: Point;
   foodIcon?: string;
+  pressedKeys: string[] = [];
 
   private gameLoopInterval: any;
 
@@ -81,18 +82,25 @@ export class SnakeGameComponent implements OnInit, OnDestroy {
 
   private startGame() {
     this.generateFood();
+    this.pressedKeys = [];
     this.isGameRunning = true;
   }
 
   private resetGame() {
     this.isGameRunning = false;
     this.snake.reset(this.INITIAL_SNAKE_BODY);
+    this.pressedKeys = [];
     this.food = undefined;
     this.resetViewTiles();
     this.assignSnakeBodyToViewTiles();
   }
 
   private updateGameLoop() {
+    if (this.pressedKeys.length > 0) {
+      this.processKeyPressed(this.pressedKeys[0]);
+      this.pressedKeys.splice(0, 1);
+    }
+
     const oldTail = this.snake.getTail();
     this.snake.next();
     const newHead = this.snake.getHead();
@@ -149,11 +157,15 @@ export class SnakeGameComponent implements OnInit, OnDestroy {
 
   @HostListener('window:keydown', ['$event'])
   onKeyDown(event: any) {
-    if (!this.isGameRunning) {
+    if (event.key === ' ' && !this.isGameRunning) {
       this.startGame();
     }
 
-    switch (event.key) {
+    this.pressedKeys.push(event.key);
+  }
+
+  private processKeyPressed(key?: string) {
+    switch (key) {
       case 'ArrowUp':
         this.snake.direction = 'up';
         break;
