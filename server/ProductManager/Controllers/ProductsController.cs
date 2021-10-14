@@ -36,7 +36,7 @@ namespace ProductManager.Controllers
     [AllowAnonymous]
     public ActionResult<IEnumerable<ProductReadDto>> GetAllProducts([FromQuery] ProductsFilterParams filterParams)
     {
-      var products = _productRepo.GetAll().ToList();
+      var products = _productRepo.GetAll();
       var result = Services.ProductFilter.Filter(products, filterParams);
       return Ok(_mapper.Map<IEnumerable<ProductReadDto>>(result));
     }
@@ -45,7 +45,7 @@ namespace ProductManager.Controllers
     [AllowAnonymous]
     public ActionResult<int> GetNumberOfProducts([FromQuery] ProductsFilterParams filterParams)
     {
-      var products = _productRepo.GetAll().ToList();
+      var products = _productRepo.GetAll();
       filterParams.Page = null;
       filterParams.Limit = null;
       var result = Services.ProductFilter.Filter(products, filterParams).Count();

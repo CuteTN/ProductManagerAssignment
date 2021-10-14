@@ -9,9 +9,9 @@ namespace ProductManager.Services
   /// All functions in this class must be immutable functions
   static public class ProductFilter
   {
-    public static List<Product> Filter(List<Product> products, ProductsFilterParams filterParams)
+    public static List<Product> Filter(IQueryable<Product> products, ProductsFilterParams filterParams)
     {
-      var result = FilterByCriteria(products, filterParams);
+      var result = FilterByCriteria(products, filterParams).ToList();
 
       if (filterParams.SortRules != null && filterParams.SortRules.Count() > 0)
         result = Sort(result, filterParams.SortRules);
@@ -42,9 +42,13 @@ namespace ProductManager.Services
         );
     }
 
-    private static List<Product> FilterByCriteria(List<Product> products, ProductsFilterParams filterParams)
+    private static IQueryable<Product> FilterByCriteria(IQueryable<Product> products, ProductsFilterParams filterParams)
     {
-      return products.Where(product => isSatisfyingProduct(product, filterParams)).ToList();
+      // NOTE: 
+      // Dirty code here, we want to actually use IQuerable to leverage its benefits in querying data
+      // But at this moment, the predicate is not in-line, thus cannot be translated by LINQ
+      // The only thing needs maintained here is the interface, JUST the interface
+      return products.ToList().Where(product => isSatisfyingProduct(product, filterParams)).AsQueryable();
     }
 
     // sorting ////////////////////////////////////////////////////////////////////////////////////

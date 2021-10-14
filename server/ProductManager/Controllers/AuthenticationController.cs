@@ -58,7 +58,7 @@ namespace ProductManager.Controllers
       var result = new RegisterResponseDto
       {
         Succeeded = identityResult.Succeeded,
-        Errors = identityResult.Errors
+        Errors = identityResult.Errors,
       };
 
       if (result.Succeeded)

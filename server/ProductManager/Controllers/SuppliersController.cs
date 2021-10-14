@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using ProductManager.DAL;
@@ -26,7 +27,7 @@ namespace ProductManager.Controllers
     [HttpGet]
     public ActionResult<IEnumerable<SupplierReadDto>> GetAllSuppliers()
     {
-      var result = _supplierRepo.GetAll();
+      var result = _supplierRepo.GetAll().ToList();
       return Ok(_mapper.Map<IEnumerable<SupplierReadDto>>(result));
     }
   }

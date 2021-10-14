@@ -8,6 +8,8 @@ namespace ProductManager.Dtos
   {
     [Required]
     public bool Succeeded;
+
+    // NOTE: Using IEnumerable to easily fit with ASP.NET Identity
     public IEnumerable<IdentityError> Errors { get; set; }
   }
 }
