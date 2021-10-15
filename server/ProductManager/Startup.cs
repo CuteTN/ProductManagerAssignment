@@ -73,7 +73,7 @@ namespace ProductManager
       // NOTE: this is to prevent authorization from accepting refresh tokens
       services.AddAuthorization(options =>
       {
-        options.AddPolicy("AccessToken", policy => 
+        options.AddPolicy("AccessToken", policy =>
         {
           policy.RequireClaim("type", "access");
         });
@@ -127,13 +127,13 @@ namespace ProductManager
     {
       app.UseAuthentication();
 
-      // NOTE: let's pretend as if this is the deployment evironment
-      // if (env.IsDevelopment())
-      // {
-      //   app.UseDeveloperExceptionPage();
-      //   app.UseSwagger();
-      //   app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "ProductManager v1"));
-      // }
+      if (env.IsDevelopment())
+      {
+        // app.UseDeveloperExceptionPage();
+        app.UseMiddleware<AutologMiddleware>();
+        app.UseSwagger();
+        app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "ProductManager v1"));
+      }
 
       // CuteTN Note: this is for DateTime formatting
       // ... and this does NOT work :)

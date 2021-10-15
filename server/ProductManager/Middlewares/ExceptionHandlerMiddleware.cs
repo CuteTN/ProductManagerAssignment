@@ -23,8 +23,6 @@ namespace ProductManager.Middlewares
       }
       catch (Exception error)
       {
-        Console.WriteLine("An exception was caught by ExceptionHandlerMiddleware.");
-
         var response = context.Response;
         response.ContentType = "application/json";
 
