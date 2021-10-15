@@ -21,6 +21,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using ProductManager.Middlewares;
 
 namespace ProductManager
 {
@@ -126,12 +127,13 @@ namespace ProductManager
     {
       app.UseAuthentication();
 
-      if (env.IsDevelopment())
-      {
-        app.UseDeveloperExceptionPage();
-        app.UseSwagger();
-        app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "ProductManager v1"));
-      }
+      // NOTE: let's pretend as if this is the deployment evironment
+      // if (env.IsDevelopment())
+      // {
+      //   app.UseDeveloperExceptionPage();
+      //   app.UseSwagger();
+      //   app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "ProductManager v1"));
+      // }
 
       // CuteTN Note: this is for DateTime formatting
       // ... and this does NOT work :)
@@ -151,6 +153,8 @@ namespace ProductManager
 
       app.UseAuthentication();
       app.UseAuthorization();
+
+      app.UseMiddleware<ExceptionHandlerMiddleware>();
 
       app.UseEndpoints(endpoints =>
       {
