@@ -11,7 +11,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
-using ProductManager.DAL;
 using AutoMapper;
 using System.Globalization;
 using Microsoft.AspNetCore.Localization;
@@ -21,7 +20,12 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
-using ProductManager.Middlewares;
+
+using ProductManager.Application.Middlewares;
+using ProductManager.Infrastructure.DbContext;
+using ProductManager.Domain.Entities;
+using ProductManager.Infrastructure.UnitOfWork;
+using ProductManager.Domain.Infrastructure.UnitOfWork;
 
 namespace ProductManager
 {
@@ -88,15 +92,15 @@ namespace ProductManager
         )
       );
 
-      services.AddDbContext<DAL.AppDbContext>(opt =>
+      services.AddDbContext<AppDbContext>(opt =>
         opt
           .UseLazyLoadingProxies()
           .UseSqlServer(Configuration.GetConnectionString("ProductConnection"))
       );
 
       services
-        .AddIdentity<Models.AppUser, IdentityRole>()
-        .AddEntityFrameworkStores<DAL.AppDbContext>()
+        .AddIdentity<AppUser, IdentityRole>()
+        .AddEntityFrameworkStores<AppDbContext>()
         .AddDefaultTokenProviders();
 
       services.AddControllers()
@@ -113,7 +117,7 @@ namespace ProductManager
       // Auto choose concrete implementation for IProductRepository
       // services.AddScoped<IProductRepository, SqlProductRepository>();
       // services.AddScoped<ICategoryRepository, SqlCategoryRepository>();
-      services.AddScoped<UnitOfWork, UnitOfWork>();
+      services.AddScoped<IUnitOfWork, UnitOfWork>();
 
       services.AddSwaggerGen(c =>
       {
