@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using ProductManager.Application.Dtos;
 using ProductManager.Application.Models;
+using ProductManager.Application.Services;
 using ProductManager.Domain.Entities;
 using ProductManager.Domain.Infrastructure.Repositories;
 using ProductManager.Domain.Infrastructure.UnitOfWork;
@@ -23,14 +24,23 @@ namespace ProductManager.Application.Controllers
     private readonly IGenericRepository<ProductDetail> _productDetailRepo;
     private readonly IGenericRepository<Category> _categoryRepo;
     private readonly IMapper _mapper;
+    private readonly ProductsFilterService _productsFilter;
+    private readonly CategoryProductService _categoryProduct;
 
-    public ProductsController(IUnitOfWork unitOfWork, IMapper mapper)
+    public ProductsController(
+      IUnitOfWork unitOfWork,
+      IMapper mapper,
+      ProductsFilterService productsFilter,
+      CategoryProductService categoryProduct
+    )
     {
       _unitOfWork = unitOfWork;
       _productRepo = unitOfWork.GetRepository<Product>();
       _productDetailRepo = unitOfWork.GetRepository<ProductDetail>();
       _categoryRepo = unitOfWork.GetRepository<Category>();
       _mapper = mapper;
+      _productsFilter = productsFilter;
+      _categoryProduct = categoryProduct;
     }
 
 
@@ -39,7 +49,7 @@ namespace ProductManager.Application.Controllers
     public ActionResult<IEnumerable<ProductReadDto>> GetAllProducts([FromQuery] ProductsFilterModel filterParams)
     {
       var products = _productRepo.GetAll();
-      var result = Services.ProductFilter.Filter(products, filterParams);
+      var result = _productsFilter.Filter(products, filterParams);
       return Ok(_mapper.Map<IEnumerable<ProductReadDto>>(result));
     }
 
@@ -50,7 +60,7 @@ namespace ProductManager.Application.Controllers
       var products = _productRepo.GetAll();
       filterParams.Page = null;
       filterParams.Limit = null;
-      var result = Services.ProductFilter.Filter(products, filterParams).Count();
+      var result = _productsFilter.Filter(products, filterParams).Count();
       return Ok(result);
     }
 
@@ -163,7 +173,7 @@ namespace ProductManager.Application.Controllers
         if (categories[i] == null)
           return NotFound();
 
-      Services.CategoryProduct.SetCategoriesOfProduct(oldProduct, categories);
+      _categoryProduct.SetCategoriesOfProduct(oldProduct, categories);
       _unitOfWork.SaveChanges();
 
       return Ok(_mapper.Map<ProductReadDto>(oldProduct));

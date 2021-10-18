@@ -8,9 +8,9 @@ using Microsoft.Extensions.Configuration;
 
 namespace ProductManager.Application.Services
 {
-  static public class TokenFactory
+  public class TokenGeneratorService
   {
-    static public JwtSecurityToken Generate(string userName, IList<string> userRoles, DateTime tokenLifeTime, string tokenType, IConfiguration configuration)
+    public JwtSecurityToken Generate(string userName, IList<string> userRoles, DateTime tokenLifeTime, string tokenType, IConfiguration configuration)
     {
       var authClaims = new List<Claim>
         {

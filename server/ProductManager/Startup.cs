@@ -1,21 +1,15 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
-using AutoMapper;
 using System.Globalization;
 using Microsoft.AspNetCore.Localization;
 using Newtonsoft.Json.Serialization;
-using Microsoft.AspNetCore.Authentication.Certificate;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
@@ -26,6 +20,7 @@ using ProductManager.Infrastructure.DbContext;
 using ProductManager.Domain.Entities;
 using ProductManager.Infrastructure.UnitOfWork;
 using ProductManager.Domain.Infrastructure.UnitOfWork;
+using ProductManager.Application.Services;
 
 namespace ProductManager
 {
@@ -43,9 +38,6 @@ namespace ProductManager
     // This method gets called by the runtime. Use this method to add services to the container.
     public void ConfigureServices(IServiceCollection services)
     {
-      // services
-      //   .AddAuthentication(CertificateAuthenticationDefaults.AuthenticationScheme)
-      //   .AddCertificate();
       var tokenValidationParameters = new TokenValidationParameters()
       {
         ValidateIssuer = true,
@@ -114,9 +106,9 @@ namespace ProductManager
 
       services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
-      // Auto choose concrete implementation for IProductRepository
-      // services.AddScoped<IProductRepository, SqlProductRepository>();
-      // services.AddScoped<ICategoryRepository, SqlCategoryRepository>();
+      services.AddSingleton(new CategoryProductService());
+      services.AddSingleton(new ProductsFilterService());
+      services.AddSingleton(new TokenGeneratorService());
       services.AddScoped<IUnitOfWork, UnitOfWork>();
 
       services.AddSwaggerGen(c =>

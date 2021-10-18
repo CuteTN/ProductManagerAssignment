@@ -34,6 +34,7 @@ namespace ProductManager.Application.Controllers
     private TokenValidationParameters _tokenValidationParameters;
     private readonly IUnitOfWork _unitOfWork;
     private readonly IGenericRepository<RefreshToken> _refreshTokenRepo;
+    private readonly TokenGeneratorService _tokenGenerator;
 
 
     public AuthenticationController(
@@ -42,7 +43,8 @@ namespace ProductManager.Application.Controllers
       IConfiguration configuration,
       TokenValidationParameters tokenValidationParameters,
       IMapper mapper,
-      IUnitOfWork unitOfWork
+      IUnitOfWork unitOfWork,
+      TokenGeneratorService tokenGenerator
     )
     {
       _userManager = userManager;
@@ -52,6 +54,7 @@ namespace ProductManager.Application.Controllers
       _tokenValidationParameters = tokenValidationParameters;
       _unitOfWork = unitOfWork;
       _refreshTokenRepo = unitOfWork.GetRepository<RefreshToken>();
+      _tokenGenerator = tokenGenerator;
     }
 
     [HttpPost("register")]
@@ -105,14 +108,14 @@ namespace ProductManager.Application.Controllers
     private async Task<LoginResponseModel> GenerateAndSaveUserJwtToken(AppUser user)
     {
       var userRoles = await _userManager.GetRolesAsync(user);
-      var accessToken = TokenFactory.Generate(
+      var accessToken = _tokenGenerator.Generate(
         user.UserName,
         userRoles,
         new DateTime().AddMinutes(1),
         "access",
         _configuration
       );
-      var refreshToken = TokenFactory.Generate(
+      var refreshToken = _tokenGenerator.Generate(
         user.UserName,
         userRoles,
         new DateTime().AddDays(30),

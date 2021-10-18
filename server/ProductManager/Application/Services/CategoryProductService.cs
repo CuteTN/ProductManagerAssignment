@@ -4,9 +4,9 @@ using ProductManager.Domain.Entities;
 
 namespace ProductManager.Application.Services
 {
-  public static class CategoryProduct
+  public class CategoryProductService
   {
-    static public void AddCategoryProduct(Product product, Category category)
+    public void AddCategoryProduct(Product product, Category category)
     {
       if (product.Categories == null)
         product.Categories = new List<Category>();
@@ -19,7 +19,7 @@ namespace ProductManager.Application.Services
         category.Products.Add(product);
     }
 
-    static public void RemoveCategoryProduct(Product product, Category category)
+    void RemoveCategoryProduct(Product product, Category category)
     {
       if (product?.Categories?.FirstOrDefault(c => c.Id == category.Id) != null)
         product.Categories.Remove(category);
@@ -28,7 +28,7 @@ namespace ProductManager.Application.Services
         category.Products.Remove(product);
     }
 
-    static public Product SetCategoriesOfProduct(Product product, ICollection<Category> categories)
+    public Product SetCategoriesOfProduct(Product product, ICollection<Category> categories)
     {
       var oldCategories = product?.Categories?.ToList();
       if (oldCategories != null)

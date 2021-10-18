@@ -8,9 +8,9 @@ using ProductManager.Domain.Entities;
 namespace ProductManager.Application.Services
 {
   /// All functions in this class must be immutable functions
-  static public class ProductFilter
+  public class ProductsFilterService
   {
-    public static List<Product> Filter(IQueryable<Product> products, ProductsFilterModel filterParams)
+    public List<Product> Filter(IQueryable<Product> products, ProductsFilterModel filterParams)
     {
       var result = FilterByCriteria(products, filterParams).ToList();
 
@@ -25,7 +25,7 @@ namespace ProductManager.Application.Services
 
 
     // searching //////////////////////////////////////////////////////////////////////////////////
-    private static bool isSatisfyingProduct(Product product, ProductsFilterModel filterParams)
+    private bool isSatisfyingProduct(Product product, ProductsFilterModel filterParams)
     {
       return
         Shared.Utils.HelperFuncs.CheckNameContainAllWords(product.Name, filterParams.HasName) &&
@@ -43,7 +43,7 @@ namespace ProductManager.Application.Services
         );
     }
 
-    private static IQueryable<Product> FilterByCriteria(IQueryable<Product> products, ProductsFilterModel filterParams)
+    private IQueryable<Product> FilterByCriteria(IQueryable<Product> products, ProductsFilterModel filterParams)
     {
       // NOTE: 
       // Dirty code here, we want to actually use IQuerable to leverage its benefits in querying data
@@ -53,7 +53,7 @@ namespace ProductManager.Application.Services
     }
 
     // sorting ////////////////////////////////////////////////////////////////////////////////////
-    private static Comparison<Product> GetCompareFunc(string sortRule)
+    private Comparison<Product> GetCompareFunc(string sortRule)
     {
       var opts = sortRule.ToLower().Split(':', StringSplitOptions.RemoveEmptyEntries);
 
@@ -75,7 +75,7 @@ namespace ProductManager.Application.Services
         selector(product1).CompareTo(selector(product2)) * (isDesc ? -1 : 1);
     }
 
-    private static Comparison<Product> GetCompareFunc(List<string> sortRules)
+    private Comparison<Product> GetCompareFunc(List<string> sortRules)
     {
       return (product1, product2) =>
       {
@@ -90,7 +90,7 @@ namespace ProductManager.Application.Services
       };
     }
 
-    private static List<Product> Sort(List<Product> products, List<string> sortRules)
+    private List<Product> Sort(List<Product> products, List<string> sortRules)
     {
       var cloneProducts = new List<Product>();
       cloneProducts.AddRange(products);
@@ -102,7 +102,7 @@ namespace ProductManager.Application.Services
     // pagination /////////////////////////////////////////////////////////////////////////////////
 
     /// Always remember that, counting starts from zero.
-    private static List<Product> Paginate(List<Product> products, int limit, int page)
+    private List<Product> Paginate(List<Product> products, int limit, int page)
     {
       // INCLUSIVE in BOTH ENDS
       var firstIndex = page * limit;
