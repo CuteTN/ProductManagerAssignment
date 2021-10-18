@@ -147,7 +147,7 @@ export class ProductEditorFormComponent implements OnInit {
   getProduct(): Product {
     let product = { ...this.form.value };
 
-    product.categoryId = product.categories?.map(
+    product.categoryIds = product.categories?.map(
       (category: Category) => category.id
     );
 
@@ -160,6 +160,12 @@ export class ProductEditorFormComponent implements OnInit {
 
   initFormValue() {
     this.form.reset(this.initial);
+
+    if(!this.initial?.categories)
+      this.form.get("categories")?.setValue([]);
+    if(!this.initial?.productDetail)
+      this.form.get("productDetail")?.setValue({});
+
     this.form.markAsPristine();
   }
 
