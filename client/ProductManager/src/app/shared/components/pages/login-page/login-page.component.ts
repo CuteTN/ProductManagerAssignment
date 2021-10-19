@@ -1,7 +1,6 @@
-import { Location } from '@angular/common';
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { AuthManagerService } from 'src/app/services';
 
@@ -21,6 +20,7 @@ export class LoginPageComponent {
     private router: Router,
     private authManager: AuthManagerService,
     private toastr: ToastrService,
+    private route: ActivatedRoute,
   ) {
     this.form = formBuilder.group({
       username: [history.state.username, [Validators.required]],
@@ -62,7 +62,7 @@ export class LoginPageComponent {
   };
 
   private routeBack() {
-    let url = history.state?.backUrl ?? '';
+    const url = this.route.snapshot.queryParams.url ?? '';
     this.router.navigate([url], { replaceUrl: true });
   }
 }

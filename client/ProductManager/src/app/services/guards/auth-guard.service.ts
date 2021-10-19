@@ -26,9 +26,11 @@ export class AuthGuardService implements CanActivate {
 
     if (username) return true;
 
+    const url = route.url.map((segment) => segment.path).join('/');
+
     this.toastr.info('You have to log in first!', 'Unauthenticated');
     this.router.navigate(['login'], {
-      state: { backUrl: route.url.map((segment) => segment.path).join('/') },
+      queryParams: { url },
     });
 
     return false;
