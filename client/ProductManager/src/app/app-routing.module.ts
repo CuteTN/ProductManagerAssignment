@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import * as Pages from './components/pages';
-import { AuthGuardService } from './core/services/guards/auth-guard.service';
+import * as Pages from 'src/app/shared/components/pages';
+import { AuthGuardService } from './services/guards/auth-guard.service';
 
 const routes: Routes = [
   { path: 'products', component: Pages.ProductsPageComponent },

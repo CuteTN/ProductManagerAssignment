@@ -9,20 +9,20 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
-import { AppErrorHandler } from './core/errors';
 import { MatDatepickerModule } from '@angular/material/datepicker';
-import { AppAngularMaterialModule } from './core/materials/app-angular-mat.module';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MAT_DATE_LOCALE } from '@angular/material/core';
 import { JwtModule } from '@auth0/angular-jwt';
 import { ToastrModule } from 'ngx-toastr';
 
 // components ///////////////////////////////////////////////////////////
-import * as Components from './components';
-import * as Pipes from './core/pipes';
-import { AppStoreModule } from './core/ngrx/app-store.module';
-import { RefreshTokenAndRetryInterceptor } from './core/interceptors/refresh-token-and-retry.interceptor';
-import { APP_TOAST_CONFIG } from './core/utils/toastr.config';
+import * as Components from './shared/components';
+import * as Pipes from './shared/pipes';
+import { AppStoreModule } from './modules/ngrx/app-store.module';
+import { AppAngularMaterialModule } from './modules/materials/app-angular-mat.module';
+import { RefreshTokenAndRetryInterceptor } from './shared/interceptors/refresh-token-and-retry.interceptor';
+import { APP_TOAST_CONFIG } from './shared/utils/toastr.config';
+import { AppErrorHandler } from './shared/errors';
 
 @NgModule({
   declarations: [

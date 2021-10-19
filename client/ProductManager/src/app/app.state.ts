@@ -1,4 +1,4 @@
-import { Category, Product, Supplier } from "./core/models";
+import { Category, Product, Supplier } from "src/app/shared/models";
 
 export interface AppState {
   readonly products: Product[],
