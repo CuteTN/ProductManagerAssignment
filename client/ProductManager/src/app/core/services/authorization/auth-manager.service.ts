@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { JwtHelperService } from '@auth0/angular-jwt';
-import { map } from 'rxjs/operators';
+import { catchError, map } from 'rxjs/operators';
 import { LocalstorageTokensProviderService } from '.';
 import { AuthenticationApiService } from '..';
 
@@ -13,6 +13,7 @@ export class AuthManagerService {
     private tokenProvider: LocalstorageTokensProviderService,
     private jwtHelper: JwtHelperService
   ) {}
+
   login = (username: string, password: string) => {
     return this.authenticationApiService
       .logIn(username, password)
@@ -35,8 +36,12 @@ export class AuthManagerService {
   refreshToken = () => {
     return this.authenticationApiService
       .refreshToken(this.tokenProvider.refreshToken ?? '')
-      .pipe(this.updateLocalTokenProvider);
+      .pipe(
+        this.updateLocalTokenProvider,
+        catchError(error => this.handleRefreshTokenFailed())
+      );
   };
+
 
   /**
    * Simply check if both access token and refresh token are stored.
@@ -59,6 +64,12 @@ export class AuthManagerService {
     this.tokenProvider.refreshToken = response.refreshToken;
     return response;
   });
+
+  private handleRefreshTokenFailed = () => {
+    return this.logout().pipe(
+      map((): LoginResponse => ({}))
+    )
+  }
 }
 
 export type LoginResponse = {

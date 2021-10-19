@@ -164,7 +164,7 @@ export class ProductEditorFormComponent implements OnInit {
     if(!this.initial?.categories)
       this.form.get("categories")?.setValue([]);
     if(!this.initial?.productDetail)
-      this.form.get("productDetail")?.setValue({});
+      this.form.get("productDetail")?.setValue({ details: "" });
 
     this.form.markAsPristine();
   }
